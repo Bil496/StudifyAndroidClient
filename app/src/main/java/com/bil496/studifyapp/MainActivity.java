@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
+import com.bil496.studifyapp.adapter.CustomItemClickListener;
 import com.bil496.studifyapp.adapter.TopicAdapter;
 import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.model.User;
@@ -22,6 +25,8 @@ import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.R.attr.data;
 
 /**
  * Created by burak on 3/11/2018.
@@ -47,8 +52,15 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<Topic[]>() {
             @Override
             public void onResponse(Call<Topic[]>call, Response<Topic[]> response) {
-                List<Topic> topics = new ArrayList<Topic>(Arrays.asList(response.body()));
-                recyclerView.setAdapter(new TopicAdapter(topics, R.layout.list_item_topic, getApplicationContext()));
+                final List<Topic> topics = new ArrayList<Topic>(Arrays.asList(response.body()));
+                recyclerView.setAdapter(new TopicAdapter(topics, R.layout.list_item_topic, getApplicationContext(), new CustomItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int position) {
+                        Topic topic = topics.get(position);
+                        // TODO: topic creation
+                        Toast.makeText(getBaseContext(), topic.getTitle(), Toast.LENGTH_LONG).show();
+                    }
+                }));
             }
 
             @Override

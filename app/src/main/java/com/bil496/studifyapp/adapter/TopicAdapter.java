@@ -24,6 +24,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
     private List<Topic> topics;
     private int rowLayout;
     private Context context;
+    CustomItemClickListener listener;
 
     public static class TopicViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.topics_layout) LinearLayout linearLayout;
@@ -36,17 +37,25 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
             ButterKnife.bind(this, v);
         }
     }
-    public TopicAdapter(List<Topic> topics, int rowLayout, Context context) {
+    public TopicAdapter(List<Topic> topics, int rowLayout, Context context, CustomItemClickListener listener) {
         this.topics = topics;
         this.rowLayout = rowLayout;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
     public TopicAdapter.TopicViewHolder onCreateViewHolder(ViewGroup parent,
                                                             int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
-        return new TopicViewHolder(view);
+        final TopicViewHolder viewHolder = new TopicViewHolder(view);
+        view.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(v, viewHolder.getPosition());
+            }
+        });
+        return viewHolder;
     }
 
 
