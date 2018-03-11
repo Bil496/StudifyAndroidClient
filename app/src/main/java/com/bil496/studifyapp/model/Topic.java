@@ -19,6 +19,10 @@ public class Topic implements Serializable {
     @SerializedName("subtopics")
     private List<Subtopic> subtopics;
 
+    public Topic() {
+        super();
+    }
+
     public Topic(Integer id, String title, Integer size, List<Subtopic> subtopics) {
         this.id = id;
         this.title = title;

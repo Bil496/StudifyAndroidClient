@@ -14,6 +14,9 @@ public class Subtopic implements Serializable {
     @SerializedName("title")
     private String title;
 
+    public Subtopic() {
+    }
+
     public Subtopic(Integer id, String title) {
         this.id = id;
         this.title = title;

@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autolabel="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/topic_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Topic Title" />
+
+    <com.dpizarro.autolabel.library.AutoLabelUI
+        android:id="@+id/label_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        autolabel:icon_cross="@drawable/cross"
+        autolabel:label_background_res="@color/default_background_label"
+        autolabel:label_clickable="true"
+        autolabel:label_padding="5px"
+        autolabel:max_labels="10"
+        autolabel:show_cross="true"
+        autolabel:text_color="@android:color/white"
+        autolabel:text_size="@dimen/label_title_size">
+
+    </com.dpizarro.autolabel.library.AutoLabelUI>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="278dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Subtopic" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add+" />
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        autolabel:srcCompat="@android:drawable/ic_menu_send" />
+
+</LinearLayout>
