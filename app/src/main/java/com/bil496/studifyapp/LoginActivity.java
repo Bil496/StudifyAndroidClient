@@ -15,8 +15,9 @@ import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Bind;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,17 +25,18 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
 
-    @Bind(R.id.input_email) EditText _usernameText;
-    @Bind(R.id.input_password) EditText _passwordText;
-    @Bind(R.id.btn_login) Button _loginButton;
+    @BindView(R.id.input_email) EditText _usernameText;
+    @BindView(R.id.input_password) EditText _passwordText;
+    @BindView(R.id.btn_login) Button _loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Integer userId = SharedPref.read(SharedPref.USER_ID, -1);
         if(userId != -1){
-            //Intent intent = new Intent(getBaseContext(), MainActivity.class);
-            //startActivity(intent);
+            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+            startActivity(intent);
+            finish();
         }
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
@@ -99,7 +101,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess(User user) {
         _loginButton.setEnabled(true);
         SharedPref.write(SharedPref.USER_ID, user.getId());
-        // TODO: call main activity
+        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+        startActivity(intent);
         finish();
     }
 
