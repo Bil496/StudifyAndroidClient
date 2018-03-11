@@ -31,4 +31,10 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    // Intro activity
+    compile 'agency.tango.android:material-intro-screen:0.0.5'
+
+
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
