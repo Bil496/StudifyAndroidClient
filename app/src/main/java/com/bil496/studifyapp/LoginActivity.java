@@ -71,20 +71,20 @@ public class LoginActivity extends AppCompatActivity {
 
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
-        Call<User[]> call = apiService.getUser(username);
-        call.enqueue(new Callback<User[]>() {
+        Call<User> call = apiService.getUser(username);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User[]>call, Response<User[]> response) {
+            public void onResponse(Call<User>call, Response<User> response) {
                 progressDialog.cancel();
-                if (response.body().length > 0){
-                    onLoginSuccess(response.body()[0]);
+                if (response.body() != null){
+                    onLoginSuccess(response.body());
                 }else{
                     onLoginFailed();
                 }
             }
 
             @Override
-            public void onFailure(Call<User[]>call, Throwable t) {
+            public void onFailure(Call<User>call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 progressDialog.cancel();

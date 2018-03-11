@@ -69,7 +69,7 @@ public class EnrollDialog extends DialogFragment {
             }
             ApiInterface apiService =
                     ApiClient.getClient().create(ApiInterface.class);
-            Call<String> call = apiService.postTalents(talents);
+            Call<String> call = apiService.postTalents(userId, topic.getId(), talents);
             Log.e(TAG, call.toString());
             call.enqueue(new Callback<String>() {
                 @Override

@@ -14,7 +14,9 @@ public class Topic implements Serializable {
     private Integer id;
     @SerializedName("title")
     private String title;
-    @SerializedName("user_count")
+    @SerializedName("userEnrolled")
+    private Boolean userEnrolled;
+    @SerializedName("userCount")
     private Integer size;
     @SerializedName("subtopics")
     private List<Subtopic> subtopics;
@@ -36,6 +38,14 @@ public class Topic implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Boolean getUserEnrolled() {
+        return userEnrolled;
+    }
+
+    public void setUserEnrolled(Boolean userEnrolled) {
+        this.userEnrolled = userEnrolled;
     }
 
     public String getTitle() {

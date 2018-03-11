@@ -49,11 +49,4 @@
             android:text="Add+" />
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        autolabel:srcCompat="@android:drawable/ic_menu_send" />
-
 </LinearLayout>

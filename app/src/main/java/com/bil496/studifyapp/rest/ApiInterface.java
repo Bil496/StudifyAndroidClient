@@ -19,23 +19,20 @@ import retrofit2.http.Query;
  */
 
 public interface ApiInterface {
-    @GET("places?_sort=title")
+    @GET("places")
     Call<Place[]> getPlaces();
 
-    @GET("places/{place_id}/topics?_sort=user_count&_order=desc&_embed=subtopics")
-    Call<String> getTopics(@Path("place_id") long placeId);
+    @GET("places/{place_id}/topics")
+    Call<Topic[]> getTopics(@Header("userId") int userId, @Path("place_id") long placeId);
 
-    @GET("topics/{topic_id}/teams?_embed=users&sort=utility_score&order=desc")
-    Call<String> getTeams(@Path("topic_id") long topicId);
+    @GET("topics/{topic_id}/teams")
+    Call<String> getTeams(@Header("userId") int userId, @Path("topic_id") long topicId);
 
-    @GET("users")
-    Call<User[]> getUser(@Query("username") String username);
+    @GET("users/{username}")
+    Call<User> getUser(@Path("username") String username);
 
-    @GET("places/{place_id}/topics?_sort=user_count&_order=desc&_embed=subtopics")
-    Call<Topic[]> getTopics(@Path("place_id") Integer placeId);
-
-    @POST("talents")
-    Call<String> postTalents(@Body Talent[] talents);
+    @POST("/topics/{id}/talents")
+    Call<String> postTalents(@Header("userId") int userId, @Path("id") int topicId, @Body Talent[] talents);
 
     @POST("places/{place_id}/topics")
     Call<String> postTopic(@Path("place_id") long placeId, @Body Topic topic);
