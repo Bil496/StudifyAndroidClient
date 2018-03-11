@@ -1,23 +1,22 @@
 package com.bil496.studifyapp.fragment;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
-import com.bil496.studifyapp.IntroActivity;
 import com.bil496.studifyapp.R;
-import com.bil496.studifyapp.adapter.CustomItemClickListener;
-import com.bil496.studifyapp.adapter.SubtopicAdapter;
-import com.bil496.studifyapp.adapter.TopicAdapter;
+import com.bil496.studifyapp.model.Subtopic;
 import com.bil496.studifyapp.model.Talent;
 import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.rest.ApiClient;
@@ -25,7 +24,6 @@ import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -40,8 +38,9 @@ import retrofit2.Response;
 
 public class EnrollDialog extends DialogFragment {
     private static final String TAG = DialogFragment.class.getSimpleName();
-    @BindView(R.id.recycler_subtopics) RecyclerView recyclerView;
+    @BindView(R.id.root_layout) LinearLayout rootLayout;
     @BindView(R.id.enroll_button) Button doneBtn;
+    List<RatingBar> ratingBars;
     private Topic topic;
     @Nullable
     @Override
@@ -50,21 +49,19 @@ public class EnrollDialog extends DialogFragment {
         ButterKnife.bind(this, view);
         topic = (Topic) getArguments().getSerializable("topic");
         getDialog().setTitle("Sample");
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new SubtopicAdapter(topic.getSubtopics(), R.layout.list_item_subtopic, getActivity()));
         doneBtn.setText("Enroll");
         doneBtn.setOnClickListener(doneAction);
+        createSubtopic(topic.getSubtopics());
         return view;
     }
 
     View.OnClickListener doneAction = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            List<Float> scores = getScores();
-            Talent[] talents = new Talent[scores.size()];
+            Talent[] talents = new Talent[topic.getSubtopics().size()];
             Integer userId = SharedPref.read(SharedPref.USER_ID, 0);
             for (int i = 0; i < talents.length; i++){
-                Talent talent = new Talent(topic.getSubtopics().get(i).getId(), userId, scores.get(i));
+                Talent talent = new Talent(topic.getSubtopics().get(i).getId(), userId, ratingBars.get(i).getRating());
                 talents[i] = talent;
             }
             ApiInterface apiService =
@@ -86,15 +83,26 @@ public class EnrollDialog extends DialogFragment {
         }
     };
 
-    private List<Float> getScores() {
-        List<Float> scores = new ArrayList<>();
-        int childCount = recyclerView.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            if (recyclerView.findViewHolderForLayoutPosition(i) instanceof SubtopicAdapter.SubtopicViewHolder) {
-                SubtopicAdapter.SubtopicViewHolder childHolder = (SubtopicAdapter.SubtopicViewHolder) recyclerView.findViewHolderForLayoutPosition(i);
-                scores.add(childHolder.ratingBar.getRating());
-            }
+    private void createSubtopic(List<Subtopic> subtopics) {
+        ratingBars = new ArrayList<>();
+        for (Subtopic subtopic : subtopics){
+            LinearLayout parent = new LinearLayout(getActivity());
+            parent.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            parent.setPadding(16, 16, 16, 16);
+            parent.setOrientation(LinearLayout.VERTICAL);
+            RatingBar ratingBar = new RatingBar(getActivity());
+            ratingBar.setStepSize(0.5f);
+            ratingBar.setNumStars(5);
+            TextView textView = new TextView(getActivity());
+            textView.setText(subtopic.getTitle());
+            textView.setTextColor(getResources().getColor(R.color.black));
+            textView.setTypeface(Typeface.DEFAULT_BOLD);
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+            parent.setGravity(Gravity.CENTER_HORIZONTAL);
+            parent.addView(textView);
+            parent.addView(ratingBar);
+            rootLayout.addView(parent);
+            ratingBars.add(ratingBar);
         }
-        return scores;
     }
 }

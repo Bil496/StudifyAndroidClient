@@ -3,6 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:appname="http://schemas.android.com/tools">
 
+    <item android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_action_reload"
+        appname:showAsAction="always|collapseActionView"
+        app:showAsAction="always|collapseActionView" />
     <item android:id="@+id/action_add"
         android:icon="@drawable/ic_action_add"
         appname:showAsAction="always|collapseActionView"

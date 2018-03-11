@@ -40,6 +40,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    private Call<Topic[]> call;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +53,35 @@ public class MainActivity extends AppCompatActivity {
 
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
-        Call<Topic[]> call = apiService.getTopics(userId, placeId);
-        call.enqueue(new Callback<Topic[]>() {
+        call = apiService.getTopics(userId, placeId);
+        loadData();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                Intent intent = new Intent(getBaseContext(), TopicFormActivity.class);
+                startActivityForResult(intent, 1);
+                return true;
+            case R.id.action_refresh:
+                loadData();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void loadData(){
+        call.clone().enqueue(new Callback<Topic[]>() {
             @Override
             public void onResponse(Call<Topic[]>call, Response<Topic[]> response) {
                 final List<Topic> topics = new ArrayList<Topic>(Arrays.asList(response.body()));
@@ -81,37 +109,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_add:
-                Intent intent = new Intent(getBaseContext(), TopicFormActivity.class);
-                startActivityForResult(intent, 1);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 1){
             if(resultCode == Activity.RESULT_OK){
                 Topic topic = (Topic) data.getSerializableExtra("topic");
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
-                Call<String> call = apiService.postTopic(SharedPref.read(SharedPref.LOCATION_ID, 0), topic);
-                call.enqueue(new Callback<String>() {
+                Call<String> call2 = apiService.postTopic(SharedPref.read(SharedPref.LOCATION_ID, 0), topic);
+                call2.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String>call, Response<String> response) {
                         Toast.makeText(getBaseContext(), response.body(), Toast.LENGTH_LONG).show();
+                        loadData();
                     }
 
                     @Override
