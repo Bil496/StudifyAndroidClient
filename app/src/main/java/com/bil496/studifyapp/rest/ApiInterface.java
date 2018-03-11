@@ -36,4 +36,7 @@ public interface ApiInterface {
 
     @POST("talents")
     Call<String> postTalents(@Body Talent[] talents);
+
+    @POST("places/{place_id}/topics")
+    Call<String> postTopic(@Path("place_id") long placeId, @Body Topic topic);
 }
