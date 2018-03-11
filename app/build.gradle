@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion 25
@@ -35,6 +36,8 @@ dependencies {
     // Intro activity
     compile 'agency.tango.android:material-intro-screen:0.0.5'
 
-
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    // recycler view
+    compile 'com.android.support:recyclerview-v7:25.3.1'
 }
