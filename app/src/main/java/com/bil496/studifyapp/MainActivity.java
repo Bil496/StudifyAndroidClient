@@ -1,6 +1,7 @@
 package com.bil496.studifyapp;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +11,8 @@ import android.widget.Toast;
 
 import com.bil496.studifyapp.adapter.CustomItemClickListener;
 import com.bil496.studifyapp.adapter.TopicAdapter;
+import com.bil496.studifyapp.fragment.EnrollDialog;
 import com.bil496.studifyapp.model.Topic;
-import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
@@ -26,7 +27,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.R.attr.data;
 
 /**
  * Created by burak on 3/11/2018.
@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
-
         Call<Topic[]> call = apiService.getTopics(placeId);
         call.enqueue(new Callback<Topic[]>() {
             @Override
@@ -59,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
                         Topic topic = topics.get(position);
                         // TODO: topic creation
                         Toast.makeText(getBaseContext(), topic.getTitle(), Toast.LENGTH_LONG).show();
+                        FragmentManager fm = getSupportFragmentManager();
+                        EnrollDialog custom = new EnrollDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("topic", topic);
+                        custom.setArguments(bundle);
+                        custom.show(fm,"");
                     }
                 }));
             }

@@ -40,4 +40,5 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // recycler view
     compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.afollestad.material-dialogs:core:0.8.6.1'
 }
