@@ -2,6 +2,7 @@ package com.bil496.studifyapp.rest;
 
 import com.bil496.studifyapp.model.Place;
 import com.bil496.studifyapp.model.PlaceResponse;
+import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.model.User;
 
 import retrofit2.Call;
@@ -25,4 +26,7 @@ public interface ApiInterface {
 
     @GET("users")
     Call<User[]> getUser(@Query("username") String username);
+
+    @GET("places/{place_id}/topics?_sort=user_count&_order=desc&_embed=subtopics")
+    Call<Topic[]> getTopics(@Path("place_id") Integer placeId);
 }
