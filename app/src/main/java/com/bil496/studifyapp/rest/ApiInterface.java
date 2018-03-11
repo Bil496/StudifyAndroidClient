@@ -2,11 +2,15 @@ package com.bil496.studifyapp.rest;
 
 import com.bil496.studifyapp.model.Place;
 import com.bil496.studifyapp.model.PlaceResponse;
+import com.bil496.studifyapp.model.Talent;
 import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.model.User;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -29,4 +33,7 @@ public interface ApiInterface {
 
     @GET("places/{place_id}/topics?_sort=user_count&_order=desc&_embed=subtopics")
     Call<Topic[]> getTopics(@Path("place_id") Integer placeId);
+
+    @POST("talents")
+    Call<String> postTalents(@Body Talent[] talents);
 }

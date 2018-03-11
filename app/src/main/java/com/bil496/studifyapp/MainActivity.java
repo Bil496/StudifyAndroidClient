@@ -33,7 +33,7 @@ import retrofit2.Response;
  */
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = IntroActivity.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
