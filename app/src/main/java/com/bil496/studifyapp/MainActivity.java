@@ -89,13 +89,23 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View v, int position) {
                         Topic topic = topics.get(position);
-                        Toast.makeText(getBaseContext(), topic.getTitle(), Toast.LENGTH_LONG).show();
-                        FragmentManager fm = getSupportFragmentManager();
-                        EnrollDialog custom = new EnrollDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("topic", topic);
-                        custom.setArguments(bundle);
-                        custom.show(fm,"");
+                        if(topic.getUserEnrolled() == false){
+
+                            Toast.makeText(getBaseContext(), topic.getTitle(), Toast.LENGTH_LONG).show();
+                            FragmentManager fm = getSupportFragmentManager();
+                            EnrollDialog custom = new EnrollDialog();
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("topic", topic);
+                            custom.setArguments(bundle);
+                            custom.show(fm,"");
+                        }else{
+                            Toast.makeText(getBaseContext(), "You already enrolled", Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(getBaseContext(), TopicActivity.class);
+                            intent.putExtra("topicId", topic.getId());
+                            intent.putExtra("topicName", topic.getTitle());
+                            startActivity(intent);
+                        }
                     }
                 }));
             }
