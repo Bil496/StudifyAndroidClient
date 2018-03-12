@@ -11,4 +11,14 @@
         android:icon="@drawable/ic_action_add"
         appname:showAsAction="always|collapseActionView"
         app:showAsAction="always|collapseActionView" />
+    <item
+        android:id="@+id/action_change_place"
+        android:orderInCategory="100"
+        android:title="Change Place"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_exit"
+        android:orderInCategory="100"
+        android:title="Exit"
+        app:showAsAction="never" />
 </menu>

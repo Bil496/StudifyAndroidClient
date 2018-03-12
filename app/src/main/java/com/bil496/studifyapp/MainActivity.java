@@ -84,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_refresh:
                 loadData();
                 return true;
+            case R.id.action_change_place:
+                SharedPref.write(SharedPref.IS_FIRST, true);
+                Intent intent2 = new Intent(this, IntroActivity.class);
+                startActivity(intent2);
+                finish();
+                return true;
+            case R.id.action_exit:
+                SharedPref.write(SharedPref.USER_ID, -1);
+                Intent intent1 = new Intent(this, LoginActivity.class);
+                startActivity(intent1);
+                finish();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
