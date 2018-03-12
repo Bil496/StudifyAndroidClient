@@ -3,6 +3,7 @@ package com.bil496.studifyapp.rest;
 import com.bil496.studifyapp.model.Place;
 import com.bil496.studifyapp.model.PlaceResponse;
 import com.bil496.studifyapp.model.Talent;
+import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.model.User;
 
@@ -26,13 +27,13 @@ public interface ApiInterface {
     Call<Topic[]> getTopics(@Header("userId") int userId, @Path("place_id") long placeId);
 
     @GET("topics/{topic_id}/teams")
-    Call<String> getTeams(@Header("userId") int userId, @Path("topic_id") long topicId);
+    Call<Team[]> getTeams(@Header("userId") int userId, @Path("topic_id") long topicId);
 
     @GET("users/{username}")
     Call<User> getUser(@Path("username") String username);
 
     @POST("/topics/{id}/talents")
-    Call<String> postTalents(@Header("userId") int userId, @Path("id") int topicId, @Body Talent[] talents);
+    Call<Integer> postTalents(@Header("userId") int userId, @Path("id") int topicId, @Body Talent[] talents);
 
     @POST("places/{place_id}/topics")
     Call<String> postTopic(@Path("place_id") long placeId, @Body Topic topic);

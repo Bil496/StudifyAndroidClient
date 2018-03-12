@@ -1,5 +1,6 @@
 package com.bil496.studifyapp.fragment;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bil496.studifyapp.R;
+import com.bil496.studifyapp.TopicActivity;
 import com.bil496.studifyapp.model.Subtopic;
 import com.bil496.studifyapp.model.Talent;
 import com.bil496.studifyapp.model.Topic;
@@ -58,6 +60,7 @@ public class EnrollDialog extends DialogFragment {
     View.OnClickListener doneAction = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            doneBtn.setClickable(false);
             Talent[] talents = new Talent[topic.getSubtopics().size()];
             Integer userId = SharedPref.read(SharedPref.USER_ID, 0);
             for (int i = 0; i < talents.length; i++){
@@ -66,18 +69,23 @@ public class EnrollDialog extends DialogFragment {
             }
             ApiInterface apiService =
                     ApiClient.getClient().create(ApiInterface.class);
-            Call<String> call = apiService.postTalents(userId, topic.getId(), talents);
+            Call<Integer> call = apiService.postTalents(userId, topic.getId(), talents);
             Log.e(TAG, call.toString());
-            call.enqueue(new Callback<String>() {
+            call.enqueue(new Callback<Integer>() {
                 @Override
-                public void onResponse(Call<String>call, Response<String> response) {
-                    Log.e(TAG, response.body());
+                public void onResponse(Call<Integer>call, Response<Integer> response) {
+                    Log.d(TAG, response.toString());
+                    Intent intent = new Intent(getActivity(), TopicActivity.class);
+                    intent.putExtra("topicId", topic.getId());
+                    intent.putExtra("topicName", topic.getTitle());
+                    startActivity(intent);
                 }
 
                 @Override
-                public void onFailure(Call<String>call, Throwable t) {
+                public void onFailure(Call<Integer>call, Throwable t) {
                     // Log error here since request failed
                     Log.e(TAG, t.toString());
+                    doneBtn.setClickable(true);
                 }
             });
         }
