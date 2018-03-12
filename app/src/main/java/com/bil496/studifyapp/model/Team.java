@@ -14,8 +14,8 @@ public class Team implements Serializable {
     private Integer id;
     @SerializedName("name")
     private String name;
-    @SerializedName("utilitScore")
-    private Float utilitScore;
+    @SerializedName("utilityScore")
+    private Float utilityScore;
     @SerializedName("users")
     private List<User> users;
 
@@ -35,12 +35,12 @@ public class Team implements Serializable {
         this.name = name;
     }
 
-    public Float getUtilitScore() {
-        return utilitScore;
+    public Float getUtilityScore() {
+        return utilityScore;
     }
 
-    public void setUtilitScore(Float utilitScore) {
-        this.utilitScore = utilitScore;
+    public void setUtilityScore(Float utilityScore) {
+        this.utilityScore = utilityScore;
     }
 
     public List<User> getUsers() {

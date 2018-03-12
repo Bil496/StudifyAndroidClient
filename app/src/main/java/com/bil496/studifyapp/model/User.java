@@ -15,7 +15,7 @@ public class User implements Serializable{
     private String name;
     @SerializedName("username")
     private String username;
-    @SerializedName("profile_pic")
+    @SerializedName("profilePic")
     private String profilePic;
 
     public User(Integer id, String name, String username, String profilePic) {

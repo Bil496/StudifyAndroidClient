@@ -41,4 +41,9 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
 
     implementation  'com.github.davidpizarro:autolabelui:1.0.1'
+
+    implementation 'com.github.bmelnychuk:atv:1.2.+'
+    implementation 'com.github.johnkil.print:print:1.2.2'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

@@ -2,9 +2,7 @@ package com.bil496.studifyapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,17 +10,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
-import com.bil496.studifyapp.adapter.CustomItemClickListener;
-import com.bil496.studifyapp.adapter.TopicAdapter;
-import com.bil496.studifyapp.fragment.EnrollDialog;
+import com.bil496.studifyapp.holder.TeamViewHolder;
+import com.bil496.studifyapp.holder.UserViewHolder;
 import com.bil496.studifyapp.model.Team;
-import com.bil496.studifyapp.model.Topic;
+import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
+import com.unnamed.b.atv.model.TreeNode;
+import com.unnamed.b.atv.view.AndroidTreeView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,24 +38,45 @@ import retrofit2.Response;
 
 public class TopicActivity extends AppCompatActivity {
     private static final String TAG = TopicActivity.class.getSimpleName();
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.container_layout)
+    RelativeLayout relativeLayout;
     private Call<Team[]> call;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_topic);
         ButterKnife.bind(this);
         Integer userId = SharedPref.read(SharedPref.USER_ID, 0);
         String topicName = getIntent().getStringExtra("topicName");
         Integer topicId = getIntent().getIntExtra("topicId", 0);
         setTitle("Teams of " + topicName);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
         call = apiService.getTeams(userId, topicId);
         loadData();
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
+        relativeLayout.addView(createTreeView(new ArrayList<Team>()).getView());
+    }
+
+    private AndroidTreeView createTreeView(List<Team> teams){
+        TreeNode root = TreeNode.root();
+
+        for (Team team : teams){
+            TreeNode teamNode = new TreeNode(new TeamViewHolder.TeamItem(team)).setViewHolder(new TeamViewHolder(this)).setExpanded(true);
+            for (User user : team.getUsers()){
+                TreeNode userNode = new TreeNode(new UserViewHolder.UserItem(user)).setViewHolder(new UserViewHolder(this));
+                teamNode.addChild(userNode);
+            }
+            root.addChild(teamNode);
+        }
+        return new AndroidTreeView(this, root);
     }
 
     @Override
@@ -88,13 +107,16 @@ public class TopicActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Team[]>call, Response<Team[]> response) {
                 final List<Team> teams = new ArrayList<Team>(Arrays.asList(response.body()));
+                relativeLayout.addView(createTreeView(teams).getView());
                 Log.d(TAG, response.toString());
+                refreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Call<Team[]>call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
+                refreshLayout.setRefreshing(false);
             }
         });
     }

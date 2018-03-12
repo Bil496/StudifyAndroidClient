@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.bil496.studifyapp.adapter.CustomItemClickListener;
 import com.bil496.studifyapp.adapter.TopicAdapter;
 import com.bil496.studifyapp.fragment.EnrollDialog;
-import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
@@ -126,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Topic[]>call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
+                refreshLayout.setRefreshing(false);
             }
         });
     }
