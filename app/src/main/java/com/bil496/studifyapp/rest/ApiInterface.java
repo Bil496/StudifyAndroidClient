@@ -35,4 +35,7 @@ public interface ApiInterface {
 
     @POST("places/{place_id}/topics")
     Call<Topic> postTopic(@Path("place_id") long placeId, @Body Topic topic);
+
+    @POST("topics/{topic_id}/teams")
+    Call<Team[]> createTeam(@Header("userId") int userId, @Path("topic_id") int topicId);
 }

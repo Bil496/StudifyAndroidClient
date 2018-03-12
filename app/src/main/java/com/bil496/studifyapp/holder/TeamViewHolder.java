@@ -5,6 +5,7 @@ package com.bil496.studifyapp.holder;
  */
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -22,25 +23,31 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
     @BindView(R.id.icon) PrintView iconView;
     @BindView(R.id.node_value) TextView teamNameLabel;
     @BindView(R.id.size) TextView sizeLabel;
-    @BindView(R.id.btn_sendRequest) PrintView sendRequestView;
     public TeamViewHolder(Context context) {
         super(context);
     }
 
     @Override
-    public View createNodeView(TreeNode node, TeamItem value) {
+    public View createNodeView(final TreeNode node, TeamItem value) {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View view = inflater.inflate(R.layout.node_team, null, false);
         ButterKnife.bind(this, view);
         iconView.setIconText(context.getResources().getString(R.string.ic_people));
         teamNameLabel.setText(value.team.getName() + " ("+value.team.getUtilityScore()+")");
         sizeLabel.setText(value.team.getUsers().size() + " people ");
+        final PrintView sendRequestView = view.findViewById(R.id.btn_sendRequest);
         sendRequestView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendRequestView.setIconText(context.getResources().getString(R.string.ic_done));
                 sendRequestView.setClickable(false);
                 // TODO: Send request
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        sendRequestView.setIconText(context.getResources().getString(R.string.ic_done_all));
+                    }
+                }, 2000);
             }
         });
         return view;
