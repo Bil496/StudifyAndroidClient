@@ -1,9 +1,7 @@
 package com.bil496.studifyapp;
 
 
-import android.Manifest;
 import android.content.Intent;
-import android.graphics.Movie;
 import android.os.Bundle;
 import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
@@ -13,14 +11,9 @@ import android.widget.Toast;
 
 import com.bil496.studifyapp.fragment.PlaceSlide;
 import com.bil496.studifyapp.model.Place;
-import com.bil496.studifyapp.model.PlaceResponse;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import agency.tango.materialintroscreen.MaterialIntroActivity;
-import agency.tango.materialintroscreen.MessageButtonBehaviour;
 import agency.tango.materialintroscreen.SlideFragmentBuilder;
 import agency.tango.materialintroscreen.animations.IViewTranslation;
 import retrofit2.Call;

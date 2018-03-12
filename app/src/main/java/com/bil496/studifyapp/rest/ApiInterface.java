@@ -1,7 +1,6 @@
 package com.bil496.studifyapp.rest;
 
 import com.bil496.studifyapp.model.Place;
-import com.bil496.studifyapp.model.PlaceResponse;
 import com.bil496.studifyapp.model.Talent;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.Topic;
@@ -13,7 +12,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * Created by burak on 3/11/2018.
@@ -36,5 +34,5 @@ public interface ApiInterface {
     Call<Integer> postTalents(@Header("userId") int userId, @Path("id") int topicId, @Body Talent[] talents);
 
     @POST("places/{place_id}/topics")
-    Call<String> postTopic(@Path("place_id") long placeId, @Body Topic topic);
+    Call<Topic> postTopic(@Path("place_id") long placeId, @Body Topic topic);
 }
