@@ -27,6 +27,7 @@ import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,8 +86,30 @@ public class EnrollDialog extends DialogFragment {
                         startActivity(intent);
                     }else{
                         APIError error = ErrorUtils.parseError(response);
-                        // … and use it to show error information
-                        Toast.makeText(getActivity(), error.message(), Toast.LENGTH_LONG).show();
+                        if (error.status() == APIError.QUIT_TEAM_BEFORE_ENROLLING_TOPIC){
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("You are currently in a team?")
+                                    .setContentText("You should quit your team!")
+                                    .setCancelText("No, I <3 them")
+                                    .setConfirmText("Yes, quit me!")
+                                    .showCancelButton(true)
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            // TODO: send quit team request
+                                        }
+                                    })
+                                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.dismissWithAnimation();
+                                        }
+                                    })
+                                    .show();
+                        }else{
+                            // … and use it to show error information
+                            Toast.makeText(getActivity(), error.message(), Toast.LENGTH_LONG).show();
+                        }
                         // … or just log the issue like we’re doing :)
                         Log.d("error message", error.message());
                     }

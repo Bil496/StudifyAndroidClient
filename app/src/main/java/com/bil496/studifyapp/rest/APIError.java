@@ -6,6 +6,7 @@ package com.bil496.studifyapp.rest;
 
 public class APIError {
 
+    public static Integer QUIT_TEAM_BEFORE_ENROLLING_TOPIC = 31;
     private int statusCode;
     private String message;
 
