@@ -5,11 +5,13 @@ package com.bil496.studifyapp.holder;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bil496.studifyapp.ProfileActivity;
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.model.User;
 import com.github.johnkil.print.PrintView;
@@ -28,7 +30,7 @@ public class UserViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHolder.U
     }
 
     @Override
-    public View createNodeView(TreeNode node, UserItem value) {
+    public View createNodeView(TreeNode node, final UserItem value) {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View view = inflater.inflate(R.layout.node_user, null, false);
         ButterKnife.bind(this, view);
@@ -39,7 +41,14 @@ public class UserViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHolder.U
                 .into(imageView);
         nameLabel.setText(value.user.getName());
         userNameLabel.setText("@" + value.user.getUsername());
-
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProfileActivity.class);
+                intent.putExtra("user", value.user);
+                context.startActivity(intent);
+            }
+        });
         return view;
     }
 
