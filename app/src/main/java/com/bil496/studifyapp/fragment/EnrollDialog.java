@@ -15,14 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.TopicActivity;
 import com.bil496.studifyapp.model.Subtopic;
 import com.bil496.studifyapp.model.Talent;
 import com.bil496.studifyapp.model.Topic;
+import com.bil496.studifyapp.rest.APIError;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
+import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
 
 import java.util.ArrayList;
@@ -64,7 +67,7 @@ public class EnrollDialog extends DialogFragment {
             Talent[] talents = new Talent[topic.getSubtopics().size()];
             Integer userId = SharedPref.read(SharedPref.USER_ID, 0);
             for (int i = 0; i < talents.length; i++){
-                Talent talent = new Talent(topic.getSubtopics().get(i).getId(), userId, ratingBars.get(i).getRating());
+                Talent talent = new Talent(topic.getSubtopics().get(i).getId(), userId, Float.floatToIntBits(ratingBars.get(i).getRating()));
                 talents[i] = talent;
             }
             ApiInterface apiService =
@@ -74,11 +77,19 @@ public class EnrollDialog extends DialogFragment {
             call.enqueue(new Callback<Integer>() {
                 @Override
                 public void onResponse(Call<Integer>call, Response<Integer> response) {
-                    Log.d(TAG, response.toString());
-                    Intent intent = new Intent(getActivity(), TopicActivity.class);
-                    intent.putExtra("topicId", topic.getId());
-                    intent.putExtra("topicName", topic.getTitle());
-                    startActivity(intent);
+                    if(response.isSuccessful()) {
+                        Log.d(TAG, response.toString());
+                        Intent intent = new Intent(getActivity(), TopicActivity.class);
+                        intent.putExtra("topicId", topic.getId());
+                        intent.putExtra("topicName", topic.getTitle());
+                        startActivity(intent);
+                    }else{
+                        APIError error = ErrorUtils.parseError(response);
+                        // … and use it to show error information
+                        Toast.makeText(getActivity(), error.message(), Toast.LENGTH_LONG).show();
+                        // … or just log the issue like we’re doing :)
+                        Log.d("error message", error.message());
+                    }
                 }
 
                 @Override
@@ -99,7 +110,7 @@ public class EnrollDialog extends DialogFragment {
             parent.setPadding(16, 16, 16, 16);
             parent.setOrientation(LinearLayout.VERTICAL);
             RatingBar ratingBar = new RatingBar(getActivity());
-            ratingBar.setStepSize(0.5f);
+            ratingBar.setStepSize(1f);
             ratingBar.setNumStars(5);
             TextView textView = new TextView(getActivity());
             textView.setText(subtopic.getTitle());

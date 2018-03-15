@@ -19,8 +19,10 @@ import com.bil496.studifyapp.adapter.CustomItemClickListener;
 import com.bil496.studifyapp.adapter.TopicAdapter;
 import com.bil496.studifyapp.fragment.EnrollDialog;
 import com.bil496.studifyapp.model.Topic;
+import com.bil496.studifyapp.rest.APIError;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
+import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
 
 import java.util.ArrayList;
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View v, int position) {
                         Topic topic = topics.get(position);
-                        if(topic.getUserEnrolled() == false){
+                        if(false == false){
 
                             Toast.makeText(getBaseContext(), topic.getTitle(), Toast.LENGTH_LONG).show();
                             FragmentManager fm = getSupportFragmentManager();
@@ -153,8 +155,16 @@ public class MainActivity extends AppCompatActivity {
                 call2.enqueue(new Callback<Topic>() {
                     @Override
                     public void onResponse(Call<Topic>call, Response<Topic> response) {
-                        Toast.makeText(getBaseContext(), "Topic " + response.body().getTitle() + " created!", Toast.LENGTH_LONG).show();
-                        loadData();
+                        if(response.isSuccessful()) {
+                            Toast.makeText(getBaseContext(), "Topic " + response.body().getTitle() + " created!", Toast.LENGTH_LONG).show();
+                            loadData();
+                        }else{
+                            APIError error = ErrorUtils.parseError(response);
+                            // … and use it to show error information
+                            Toast.makeText(getApplicationContext(), error.message(), Toast.LENGTH_LONG).show();
+                            // … or just log the issue like we’re doing :)
+                            Log.d("error message", error.message());
+                        }
                     }
 
                     @Override

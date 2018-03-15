@@ -13,10 +13,10 @@ public class Talent implements Serializable {
     private Integer subtopicId;
     @SerializedName("userId")
     private Integer userId;
-    @SerializedName("score")
-    private Float score;
+    @SerializedName("talentLevel")
+    private Integer score;
 
-    public Talent(Integer subtopicId, Integer userId, Float score) {
+    public Talent(Integer subtopicId, Integer userId, Integer score) {
         this.subtopicId = subtopicId;
         this.userId = userId;
         this.score = score;
@@ -38,11 +38,11 @@ public class Talent implements Serializable {
         this.userId = userId;
     }
 
-    public Float getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(Float score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 }

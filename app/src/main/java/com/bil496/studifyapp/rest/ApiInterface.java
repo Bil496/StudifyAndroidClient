@@ -18,11 +18,11 @@ import retrofit2.http.Path;
  */
 
 public interface ApiInterface {
-    @GET("places")
+    @GET("locations")
     Call<Place[]> getPlaces();
 
-    @GET("places/{place_id}/topics")
-    Call<Topic[]> getTopics(@Header("userId") int userId, @Path("place_id") long placeId);
+    @GET("locations/{location_id}/topics")
+    Call<Topic[]> getTopics(@Header("userId") int userId, @Path("location_id") long placeId);
 
     @GET("topics/{topic_id}/teams")
     Call<Team[]> getTeams(@Header("userId") int userId, @Path("topic_id") long topicId);
@@ -30,11 +30,11 @@ public interface ApiInterface {
     @GET("users/{username}")
     Call<User> getUser(@Path("username") String username);
 
-    @POST("/topics/{id}/talents")
+    @POST("/topics/{id}/talentLevels")
     Call<Integer> postTalents(@Header("userId") int userId, @Path("id") int topicId, @Body Talent[] talents);
 
-    @POST("places/{place_id}/topics")
-    Call<Topic> postTopic(@Path("place_id") long placeId, @Body Topic topic);
+    @POST("locations/{location_id}/topics")
+    Call<Topic> postTopic(@Path("location_id") long placeId, @Body Topic topic);
 
     @POST("topics/{topic_id}/teams")
     Call<Team[]> createTeam(@Header("userId") int userId, @Path("topic_id") int topicId);
