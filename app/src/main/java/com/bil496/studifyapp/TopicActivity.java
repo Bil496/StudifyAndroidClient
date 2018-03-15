@@ -1,8 +1,8 @@
 package com.bil496.studifyapp;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -67,6 +67,11 @@ public class TopicActivity extends AppCompatActivity {
             }
         });
         createTreeView(new ArrayList<Team>());
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        ab.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
     private void createTreeView(List<Team> teams){
         TreeNode root = TreeNode.root();
@@ -86,7 +91,7 @@ public class TopicActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.topic_menu, menu);
         return true;
     }
 
@@ -120,8 +125,11 @@ public class TopicActivity extends AppCompatActivity {
                     }
                 });
                 return true;
-            case R.id.action_refresh:
-                loadData();
+            case R.id.action_edit:
+                Toast.makeText(this, "Talents editing is not possible right now.", Toast.LENGTH_LONG).show();
+                return true;
+            case android.R.id.home:
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
