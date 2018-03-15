@@ -24,6 +24,7 @@ import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -111,16 +112,42 @@ public class MainActivity extends AppCompatActivity {
                 recyclerView.setAdapter(new TopicAdapter(topics, R.layout.list_item_topic, getApplicationContext(), new CustomItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
-                        Topic topic = topics.get(position);
-                        if(false == false){
-
-                            Toast.makeText(getBaseContext(), topic.getTitle(), Toast.LENGTH_LONG).show();
-                            FragmentManager fm = getSupportFragmentManager();
-                            EnrollDialog custom = new EnrollDialog();
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("topic", topic);
-                            custom.setArguments(bundle);
-                            custom.show(fm,"");
+                        final Topic topic = topics.get(position);
+                        if(topic.getId() != SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1)){
+                            if (SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1){
+                                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                        .setTitleText("You are currently in a team?")
+                                        .setContentText("You should quit your team!")
+                                        .setCancelText("No, I <3 them")
+                                        .setConfirmText("Yes, quit me!")
+                                        .showCancelButton(true)
+                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                // TODO: send quit team request
+                                                FragmentManager fm = getSupportFragmentManager();
+                                                EnrollDialog custom = new EnrollDialog();
+                                                Bundle bundle = new Bundle();
+                                                bundle.putSerializable("topic", topic);
+                                                custom.setArguments(bundle);
+                                                custom.show(fm,"");
+                                            }
+                                        })
+                                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                            @Override
+                                            public void onClick(SweetAlertDialog sDialog) {
+                                                sDialog.dismissWithAnimation();
+                                            }
+                                        })
+                                        .show();
+                            }else{
+                                FragmentManager fm = getSupportFragmentManager();
+                                EnrollDialog custom = new EnrollDialog();
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("topic", topic);
+                                custom.setArguments(bundle);
+                                custom.show(fm,"");
+                            }
                         }else{
                             Toast.makeText(getBaseContext(), "You already enrolled", Toast.LENGTH_LONG).show();
 

@@ -14,6 +14,8 @@ public class SharedPref {
     public static final String LOCATION_TITLE = "LOCATION_TITLE";
     public static final String USER_ID = "USER_ID";
     public static final String IS_FIRST = "IS_FIRST";
+    public static final String CURRENT_TOPIC_ID = "CURRENT_TOPIC_ID";
+    public static final String CURRENT_TEAM_ID = "CURRENT_TEAM_ID";
 
     private SharedPref()
     {

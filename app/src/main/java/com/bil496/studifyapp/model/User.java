@@ -17,6 +17,10 @@ public class User implements Serializable{
     private String username;
     @SerializedName("profilePic")
     private String profilePic;
+    @SerializedName("currentTopic")
+    private Topic currentTopic;
+    @SerializedName("currentTeam")
+    private Team currentTeam;
 
     public User(Integer id, String name, String username, String profilePic) {
         this.id = id;
@@ -55,5 +59,21 @@ public class User implements Serializable{
 
     public void setProfilePic(String profilePic) {
         this.profilePic = profilePic;
+    }
+
+    public Topic getCurrentTopic() {
+        return currentTopic;
+    }
+
+    public void setCurrentTopic(Topic currentTopic) {
+        this.currentTopic = currentTopic;
+    }
+
+    public Team getCurrentTeam() {
+        return currentTeam;
+    }
+
+    public void setCurrentTeam(Team currentTeam) {
+        this.currentTeam = currentTeam;
     }
 }

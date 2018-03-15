@@ -55,6 +55,7 @@ public class TopicActivity extends AppCompatActivity {
         userId = SharedPref.read(SharedPref.USER_ID, 0);
         String topicName = getIntent().getStringExtra("topicName");
         topicId = getIntent().getIntExtra("topicId", 0);
+        SharedPref.write(SharedPref.CURRENT_TOPIC_ID, topicId);
         setTitle("Teams of " + topicName);
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
