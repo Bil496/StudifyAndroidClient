@@ -5,6 +5,7 @@ package com.bil496.studifyapp.holder;
  */
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.model.Team;
+import com.bil496.studifyapp.util.SharedPref;
 import com.github.johnkil.print.PrintView;
 import com.unnamed.b.atv.model.TreeNode;
 
@@ -36,20 +38,28 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
         teamNameLabel.setText(value.team.getName() + " ("+value.team.getUtilityScore()+")");
         sizeLabel.setText(value.team.getUsers().size() + " people ");
         final PrintView sendRequestView = view.findViewById(R.id.btn_sendRequest);
-        sendRequestView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendRequestView.setIconText(context.getResources().getString(R.string.ic_done));
-                sendRequestView.setClickable(false);
-                // TODO: Send request
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        sendRequestView.setIconText(context.getResources().getString(R.string.ic_done_all));
-                    }
-                }, 2000);
-            }
-        });
+        if(value.team.getId() == SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1)){
+            sendRequestView.setIconText(R.string.ic_verified_user);
+        }
+        else if(value.team.getLocked()){
+            sendRequestView.setIconText(R.string.ic_lock);
+            sendRequestView.setIconColor(R.color.red);
+        }else{
+            sendRequestView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sendRequestView.setIconText(R.string.ic_done);
+                    sendRequestView.setClickable(false);
+                    // TODO: Send request
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            sendRequestView.setIconText(R.string.ic_done_all);
+                        }
+                    }, 2000);
+                }
+            });
+        }
         return view;
     }
 

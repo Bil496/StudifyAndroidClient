@@ -65,6 +65,6 @@
             app:iconSize="20dp"
             app:iconColor="#99cc00"
             app:iconFont="fonts/material-icon-font.ttf"
-            app:iconText="@string/ic_add" />
+            app:iconText="@string/ic_add_box" />
     </LinearLayout>
 </RelativeLayout>

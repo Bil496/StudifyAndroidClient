@@ -16,6 +16,8 @@ public class Team implements Serializable {
     private String name;
     @SerializedName("jointUtility")
     private Integer utilityScore;
+    @SerializedName("locked")
+    private Boolean isLocked;
     @SerializedName("members")
     private List<User> users;
 
@@ -49,5 +51,13 @@ public class Team implements Serializable {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    public Boolean getLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(Boolean locked) {
+        isLocked = locked;
     }
 }

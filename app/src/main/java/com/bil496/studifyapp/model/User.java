@@ -13,7 +13,7 @@ public class User implements Serializable{
     private Integer id;
     @SerializedName("name")
     private String name;
-    @SerializedName("username")
+    @SerializedName("userName")
     private String username;
     @SerializedName("profilePic")
     private String profilePic;

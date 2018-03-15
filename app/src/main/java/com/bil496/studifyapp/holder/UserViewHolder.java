@@ -21,7 +21,8 @@ import butterknife.ButterKnife;
 
 public class UserViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHolder.UserItem> {
     @BindView(R.id.profile_pic) ImageView imageView;
-    @BindView(R.id.user_name) TextView userNameLabel;
+    @BindView(R.id.user_name) TextView nameLabel;
+    @BindView(R.id.size) TextView userNameLabel;
     public UserViewHolder(Context context) {
         super(context);
     }
@@ -36,10 +37,8 @@ public class UserViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHolder.U
                 .placeholder(R.drawable.user)
                 .error(R.drawable.user)
                 .into(imageView);
-        userNameLabel.setText(value.user.getName());
-
-        TextView sizeText = (TextView) view.findViewById(R.id.size);
-        sizeText.setText("123 items");
+        nameLabel.setText(value.user.getName());
+        userNameLabel.setText("@" + value.user.getUsername());
 
         return view;
     }

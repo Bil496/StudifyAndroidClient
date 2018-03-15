@@ -15,6 +15,7 @@
     </string>
 
 
+    <string name="ic_verified_user">&#xE8E8;</string>
     <string name="ic_access_alarms">&#xe000;</string>
     <string name="ic_access_time">&#xe001;</string>
     <string name="ic_accessibility">&#xe002;</string>
@@ -22,10 +23,10 @@
     <string name="ic_account_circle">&#xe004;</string>
     <string name="ic_adb">&#xe005;</string>
     <string name="ic_add">&#xe006;</string>
-    <string name="ic_add_alarm">&#xe007;</string>
-    <string name="ic_add_box">&#xe008;</string>
-    <string name="ic_add_circle">&#xe009;</string>
-    <string name="ic_add_circle_outline">&#xe00a;</string>
+    <string name="ic_add_alarm">&#xE145;</string>
+    <string name="ic_add_box">&#xE146;</string>
+    <string name="ic_add_circle">&#xE147;</string>
+    <string name="ic_add_circle_outline">&#xE148;</string>
     <string name="ic_airplane_mode_off">&#xe00b;</string>
     <string name="ic_airplane_mode_on">&#xe00c;</string>
     <string name="ic_android">&#xe00d;</string>
@@ -124,8 +125,8 @@
     <string name="ic_do_not_disturb">&#xe06a;</string>
     <string name="ic_dock">&#xe06b;</string>
     <string name="ic_domain">&#xe06c;</string>
-    <string name="ic_done">&#xe06d;</string>
-    <string name="ic_done_all">&#xe06e;</string>
+    <string name="ic_done">&#xE876;</string>
+    <string name="ic_done_all">&#xE877;</string>
     <string name="ic_drafts">&#xe06f;</string>
     <string name="ic_drive">&#xe070;</string>
     <string name="ic_drive_apk">&#xe071;</string>
@@ -212,10 +213,10 @@
     <string name="ic_keep">&#xe0c2;</string>
     <string name="ic_keyboard">&#xe0c3;</string>
     <string name="ic_keyboard_alt">&#xe0c4;</string>
-    <string name="ic_keyboard_arrow_down">&#xe0c5;</string>
-    <string name="ic_keyboard_arrow_left">&#xe0c6;</string>
-    <string name="ic_keyboard_arrow_right">&#xe0c7;</string>
-    <string name="ic_keyboard_arrow_up">&#xe0c8;</string>
+    <string name="ic_keyboard_arrow_down">&#xE313;</string>
+    <string name="ic_keyboard_arrow_left">&#xE314;</string>
+    <string name="ic_keyboard_arrow_right">&#xE315;</string>
+    <string name="ic_keyboard_arrow_up">&#xE316;</string>
     <string name="ic_keyboard_backspace">&#xe0c9;</string>
     <string name="ic_keyboard_capslock">&#xe0ca;</string>
     <string name="ic_keyboard_control">&#xe0cb;</string>
@@ -275,7 +276,7 @@
     <string name="ic_pause">&#xe101;</string>
     <string name="ic_pause_circle_fill">&#xe102;</string>
     <string name="ic_pause_circle_outline">&#xe103;</string>
-    <string name="ic_people">&#xe104;</string>
+    <string name="ic_people">&#xE7FB;</string>
     <string name="ic_person">&#xe105;</string>
     <string name="ic_person_add">&#xe106;</string>
     <string name="ic_person_location">&#xe107;</string>
