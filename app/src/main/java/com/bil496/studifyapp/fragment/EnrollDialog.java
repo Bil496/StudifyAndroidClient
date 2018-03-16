@@ -34,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,11 +74,11 @@ public class EnrollDialog extends DialogFragment {
             }
             ApiInterface apiService =
                     ApiClient.getClient().create(ApiInterface.class);
-            Call<Integer> call = apiService.postTalents(userId, topic.getId(), talents);
+            Call<ResponseBody> call = apiService.postTalents(userId, topic.getId(), talents);
             Log.e(TAG, call.toString());
-            call.enqueue(new Callback<Integer>() {
+            call.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<Integer>call, Response<Integer> response) {
+                public void onResponse(Call<ResponseBody>call, Response<ResponseBody> response) {
                     if(response.isSuccessful()) {
                         Log.d(TAG, response.toString());
                         Intent intent = new Intent(getActivity(), TopicActivity.class);
@@ -116,7 +117,7 @@ public class EnrollDialog extends DialogFragment {
                 }
 
                 @Override
-                public void onFailure(Call<Integer>call, Throwable t) {
+                public void onFailure(Call<ResponseBody>call, Throwable t) {
                     // Log error here since request failed
                     Log.e(TAG, t.toString());
                     doneBtn.setClickable(true);
