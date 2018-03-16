@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,6 +85,18 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.fab_action_quit_team:
+                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("Won't be able to read older messages even if you come back!")
+                        .setConfirmText("Yes, leave it!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                //TODO: send quit request to the server.
+                                finish();
+                            }
+                        })
+                        .show();
                 break;
             case R.id.fab_action_show_requests:
                 break;

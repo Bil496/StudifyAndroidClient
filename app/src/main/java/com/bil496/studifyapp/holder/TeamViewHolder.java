@@ -62,7 +62,7 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
                 }
             });
         }
-        view.setOnClickListener(new View.OnClickListener() {
+        teamNameLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TeamActivity.class);
