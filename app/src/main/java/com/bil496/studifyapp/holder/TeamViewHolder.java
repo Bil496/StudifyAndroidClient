@@ -5,6 +5,7 @@ package com.bil496.studifyapp.holder;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bil496.studifyapp.R;
+import com.bil496.studifyapp.TeamActivity;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.util.SharedPref;
 import com.github.johnkil.print.PrintView;
@@ -60,6 +62,13 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
                 }
             });
         }
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, TeamActivity.class);
+                context.startActivity(intent);
+            }
+        });
         return view;
     }
 
