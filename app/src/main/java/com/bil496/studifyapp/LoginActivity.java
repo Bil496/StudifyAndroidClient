@@ -18,9 +18,12 @@ import com.bil496.studifyapp.util.SharedPref;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.ContentValues.TAG;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -105,9 +108,29 @@ public class LoginActivity extends AppCompatActivity {
             SharedPref.write(SharedPref.CURRENT_TOPIC_ID, user.getCurrentTopic().getId());
         if(user.getCurrentTeam() != null)
             SharedPref.write(SharedPref.CURRENT_TEAM_ID, user.getCurrentTeam().getId());
+        saveTokenToServer(user.getId(), SharedPref.read(SharedPref.FIREBASE_TOKEN, ""));
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void saveTokenToServer(Integer userId, String refreshedToken){
+        if(refreshedToken.length() > 0){
+            ApiInterface apiService =
+                    ApiClient.getClient().create(ApiInterface.class);
+            Call<ResponseBody> call = apiService.saveToken(userId, refreshedToken);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Log.i(TAG, "Token saved to the server successfully");
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e(TAG, "Problem occured while saving the token to the server");
+                }
+            });
+        }
     }
 
     public void onLoginFailed() {

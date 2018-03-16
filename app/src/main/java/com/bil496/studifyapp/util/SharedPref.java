@@ -16,6 +16,7 @@ public class SharedPref {
     public static final String IS_FIRST = "IS_FIRST";
     public static final String CURRENT_TOPIC_ID = "CURRENT_TOPIC_ID";
     public static final String CURRENT_TEAM_ID = "CURRENT_TEAM_ID";
+    public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
 
     private SharedPref()
     {

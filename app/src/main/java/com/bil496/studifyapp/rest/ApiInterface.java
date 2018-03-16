@@ -6,6 +6,7 @@ import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.model.User;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -31,11 +32,14 @@ public interface ApiInterface {
     Call<User> getUser(@Path("username") String username);
 
     @POST("/topics/{id}/talentLevels")
-    Call<Integer> postTalents(@Header("userId") int userId, @Path("id") int topicId, @Body Talent[] talents);
+    Call<ResponseBody> postTalents(@Header("userId") int userId, @Path("id") int topicId, @Body Talent[] talents);
 
     @POST("locations/{location_id}/topics")
     Call<Topic> postTopic(@Path("location_id") long placeId, @Body Topic topic);
 
     @POST("topics/{topic_id}/teams")
     Call<Team[]> createTeam(@Header("userId") int userId, @Path("topic_id") int topicId);
+
+    @POST("firebase_token")
+    Call<ResponseBody> saveToken(@Header("userId") int userId, @Body String firebaseToken);
 }
