@@ -35,7 +35,7 @@ public interface ApiInterface {
     Call<ResponseBody> postTalents(@Header("userId") int userId, @Path("id") int topicId, @Body Talent[] talents);
 
     @POST("locations/{location_id}/topics")
-    Call<Topic> postTopic(@Path("location_id") long placeId, @Body Topic topic);
+    Call<Integer> postTopic(@Path("location_id") long placeId, @Body Topic topic);
 
     @POST("topics/{topic_id}/teams")
     Call<Team[]> createTeam(@Header("userId") int userId, @Path("topic_id") int topicId);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -67,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
                 loadData();
             }
         });
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.mipmap.ic_launcher);
+        ab.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     @Override
@@ -178,12 +184,12 @@ public class MainActivity extends AppCompatActivity {
                 final Topic topic = (Topic) data.getSerializableExtra("topic");
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
-                Call<Topic> call2 = apiService.postTopic(SharedPref.read(SharedPref.LOCATION_ID, 0), topic);
-                call2.enqueue(new Callback<Topic>() {
+                Call<Integer> call2 = apiService.postTopic(SharedPref.read(SharedPref.LOCATION_ID, 0), topic);
+                call2.enqueue(new Callback<Integer>() {
                     @Override
-                    public void onResponse(Call<Topic>call, Response<Topic> response) {
+                    public void onResponse(Call<Integer>call, Response<Integer> response) {
                         if(response.isSuccessful()) {
-                            Toast.makeText(getBaseContext(), "Topic " + response.body().getTitle() + " created!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getBaseContext(), "Topic " + topic.getTitle() + " created!", Toast.LENGTH_LONG).show();
                             loadData();
                         }else{
                             APIError error = ErrorUtils.parseError(response);
@@ -195,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Topic>call, Throwable t) {
+                    public void onFailure(Call<Integer>call, Throwable t) {
                         // Log error here since request failed
                         Log.e(TAG, t.toString());
                     }
