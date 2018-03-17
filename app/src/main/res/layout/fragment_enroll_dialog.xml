@@ -17,12 +17,13 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <Button
+    <com.app.infideap.stylishwidget.view.AButton
         android:id="@+id/enroll_button"
+        style="@style/Button.Success"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:text="Enroll" />
 
 </RelativeLayout>

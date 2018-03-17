@@ -1,52 +1,101 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:autolabel="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <EditText
-        android:id="@+id/topic_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Topic Title" />
-
-    <com.dpizarro.autolabel.library.AutoLabelUI
-        android:id="@+id/label_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        autolabel:icon_cross="@drawable/cross"
-        autolabel:label_background_res="@color/default_background_label"
-        autolabel:label_clickable="true"
-        autolabel:label_padding="5px"
-        autolabel:max_labels="10"
-        autolabel:show_cross="true"
-        autolabel:text_color="@android:color/white"
-        autolabel:text_size="@dimen/label_title_size">
-
-    </com.dpizarro.autolabel.library.AutoLabelUI>
+    xmlns:autolabel="http://schemas.android.com/tools"
+    android:background="@color/colorBlue_50"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:gravity="bottom"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="278dp"
+        <com.app.infideap.stylishwidget.view.ATextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Subtopic" />
+            android:text="Topic Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.app.infideap.stylishwidget.view.ATextInputEditText
+                android:id="@+id/topic_title"
+                style="@style/EditText.RoundBorder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Topic Name (e.g. BIL 448)" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <com.app.infideap.stylishwidget.view.ATextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Add+" />
+            android:text="Talents"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold" />
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <com.dpizarro.autolabel.library.AutoLabelUI
+            android:id="@+id/label_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            autolabel:icon_cross="@drawable/cross"
+            autolabel:label_background_res="@color/default_background_label"
+            autolabel:label_clickable="true"
+            autolabel:label_padding="5px"
+            autolabel:max_labels="10"
+            autolabel:show_cross="true"
+            autolabel:text_color="@android:color/white"
+            autolabel:text_size="@dimen/label_title_size">
+
+        </com.dpizarro.autolabel.library.AutoLabelUI>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.app.infideap.stylishwidget.view.AEditText
+                android:id="@+id/editText"
+                style="@style/EditText.RoundBorder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/button"
+                android:hint="Talent Name" />
+
+            <com.app.infideap.stylishwidget.view.AButton
+                android:id="@+id/button"
+                style="@style/Button.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="Add+" />
+        </RelativeLayout>
+
     </LinearLayout>
-
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

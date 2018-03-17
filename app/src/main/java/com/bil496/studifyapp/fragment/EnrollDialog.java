@@ -17,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.infideap.stylishwidget.view.AButton;
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.TopicActivity;
 import com.bil496.studifyapp.model.Subtopic;
@@ -47,7 +48,8 @@ import retrofit2.Response;
 public class EnrollDialog extends DialogFragment {
     private static final String TAG = DialogFragment.class.getSimpleName();
     @BindView(R.id.root_layout) LinearLayout rootLayout;
-    @BindView(R.id.enroll_button) Button doneBtn;
+    @BindView(R.id.enroll_button)
+    AButton doneBtn;
     List<RatingBar> ratingBars;
     private Topic topic;
     @Nullable
@@ -86,6 +88,7 @@ public class EnrollDialog extends DialogFragment {
                         Intent intent = new Intent(getActivity(), TopicActivity.class);
                         intent.putExtra("topicId", topic.getId());
                         intent.putExtra("topicName", topic.getTitle());
+                        dismiss();
                         startActivity(intent);
                     }else{
                         APIError error = ErrorUtils.parseError(response);

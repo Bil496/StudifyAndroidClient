@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.app.infideap.stylishwidget.view.Stylish;
 import com.bil496.studifyapp.adapter.CustomItemClickListener;
 import com.bil496.studifyapp.adapter.TopicAdapter;
 import com.bil496.studifyapp.fragment.EnrollDialog;
@@ -50,6 +51,13 @@ public class MainActivity extends AppCompatActivity {
     private Call<Topic[]> call;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Initial this before setContentView or declare in onCreate() of Custom Application
+        String fontFolder = "Exo_2/Exo2-";
+        Stylish.getInstance().set(
+                fontFolder.concat("Regular.ttf"),
+                fontFolder.concat("Bold.ttf"),
+                fontFolder.concat("Italic.ttf"),
+                fontFolder.concat("BoldItalic.ttf"));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);

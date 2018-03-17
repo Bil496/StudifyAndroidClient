@@ -3,16 +3,17 @@ package com.bil496.studifyapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.app.infideap.stylishwidget.view.AButton;
+import com.app.infideap.stylishwidget.view.AEditText;
+import com.app.infideap.stylishwidget.view.ATextInputEditText;
 import com.bil496.studifyapp.model.Subtopic;
 import com.bil496.studifyapp.model.Topic;
 import com.dpizarro.autolabel.library.AutoLabelUI;
@@ -29,9 +30,12 @@ import butterknife.ButterKnife;
  */
 
 public class TopicFormActivity extends AppCompatActivity {
-    @BindView(R.id.topic_title) EditText topicTitle;
-    @BindView(R.id.editText) EditText mEditText;
-    @BindView(R.id.button) Button mButton;
+    @BindView(R.id.topic_title)
+    ATextInputEditText topicTitle;
+    @BindView(R.id.editText)
+    AEditText mEditText;
+    @BindView(R.id.button)
+    AButton mButton;
     @BindView(R.id.label_view) AutoLabelUI autoLabelUI;
 
     @Override
@@ -47,6 +51,11 @@ public class TopicFormActivity extends AppCompatActivity {
                 mEditText.setText("");
             }
         });
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        ab.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     @Override
@@ -78,6 +87,8 @@ public class TopicFormActivity extends AppCompatActivity {
             }else {
                 Toast.makeText(getBaseContext(), "Enter a valid title", Toast.LENGTH_LONG).show();
             }
+        }else if(item.getItemId() == android.R.id.home){
+            finish();
         }
         return true;
     }
