@@ -5,38 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:minHeight="72dp"
-    android:orientation="horizontal"
-    android:padding="16dp">
+    android:minHeight="64dp"
+    android:orientation="vertical"
+    android:padding="8dp">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <TextView
+        <com.app.infideap.stylishwidget.view.ATextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
+            android:layout_weight="1"
             android:paddingRight="16dp"
-            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="16sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:orientation="horizontal">
-        <TextView
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <com.app.infideap.stylishwidget.view.ATextView
             android:id="@+id/size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+
             android:text="100" />
+
     </LinearLayout>
 
 </LinearLayout>

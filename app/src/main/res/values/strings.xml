@@ -14,6 +14,7 @@
         completions."
     </string>
 
+    <string name="ic_trending_up">&#xE8E5;</string>
     <string name="ic_group_old">&#xe0ae;</string>
     <string name="ic_assigment">&#xE85D;</string>
     <string name="ic_verified_user">&#xE8E8;</string>

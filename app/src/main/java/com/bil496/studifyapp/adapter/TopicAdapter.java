@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.app.infideap.stylishwidget.util.TextViewUtils;
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.model.Topic;
 
@@ -27,7 +28,6 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
     CustomItemClickListener listener;
 
     public static class TopicViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.topics_layout) LinearLayout linearLayout;
         @BindView(R.id.title) TextView title;
         @BindView(R.id.size) TextView size;
 
@@ -63,6 +63,9 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
     public void onBindViewHolder(TopicViewHolder holder, final int position) {
         holder.title.setText(topics.get(position).getTitle());
         holder.size.setText(topics.get(position).getSize().toString());
+        TextViewUtils utils = TextViewUtils.getInstance();
+        //Increment
+        Thread incrementThread = utils.printIncrement(holder.size, "%d active users", topics.get(position).getSize(), 500);
     }
 
     @Override
