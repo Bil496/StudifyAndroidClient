@@ -48,4 +48,10 @@ public interface ApiInterface {
 
     @POST("/teams/{teamId}/kick/{kickedUserId}")
     Call<ResponseBody> kickUser(@Header("userId") int userId, @Path("teamId") int teamId, @Path("kickedUserId") int kickedUserId);
+
+    @POST("/teams/{teamId}/lock")
+    Call<ResponseBody> lockTeam(@Header("userId") int userId, @Path("teamId") int teamId);
+
+    @POST("/teams/{teamId}/unlock")
+    Call<ResponseBody> unlockTeam(@Header("userId") int userId, @Path("teamId") int teamId);
 }

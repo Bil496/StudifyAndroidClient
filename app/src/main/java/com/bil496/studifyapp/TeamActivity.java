@@ -103,6 +103,36 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void lockTeam(final boolean lock){
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseBody> call = null;
+        if (lock){
+            call = apiService.lockTeam(SharedPref.read(SharedPref.USER_ID, -1),
+                    team.getId());
+        }else {
+            call = apiService.unlockTeam(SharedPref.read(SharedPref.USER_ID, -1),
+                    team.getId());
+        }
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    Toast.makeText(TeamActivity.this, "Team is successfuly " + (lock ? "locked" : "unlocked"), Toast.LENGTH_LONG).show();
+                    loadData();
+                }else{
+                    APIError error = ErrorUtils.parseError(response);
+                    Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(TeamActivity.this, "FAILED", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public void removeUserFromTeam(final Integer kickedUserId){
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
@@ -223,7 +253,8 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    //TODO: send unlock request to the server.
+                                    lockTeam(false);
+                                    sweetAlertDialog.dismissWithAnimation();
                                 }
                             })
                             .show();
@@ -235,7 +266,8 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    //TODO: send lock request to the server.
+                                    lockTeam(true);
+                                    sweetAlertDialog.dismissWithAnimation();
                                 }
                             })
                             .show();
