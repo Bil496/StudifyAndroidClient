@@ -1,5 +1,6 @@
 package com.bil496.studifyapp.holder;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bil496.studifyapp.ProfileActivity;
 import com.bil496.studifyapp.R;
+import com.bil496.studifyapp.TeamActivity;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.util.SharedPref;
 import com.github.johnkil.print.PrintView;
@@ -72,7 +74,9 @@ public class UserAtTeamViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHo
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    //TODO: send kick request to the server.
+                                    TeamActivity activity = (TeamActivity)context;
+                                    activity.removeUserFromTeam(value.user.getId());
+                                    sweetAlertDialog.dismissWithAnimation();
                                 }
                             })
                             .show();

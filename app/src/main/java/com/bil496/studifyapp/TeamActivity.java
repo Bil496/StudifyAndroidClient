@@ -17,8 +17,10 @@ import com.bil496.studifyapp.holder.UserAtTeamViewHolder;
 import com.bil496.studifyapp.holder.UserViewHolder;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.User;
+import com.bil496.studifyapp.rest.APIError;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
+import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
@@ -29,6 +31,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,6 +101,34 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
             lockerBtn.setColorNormalResId(R.color.green_btn);
             lockerBtn.setColorPressedResId(R.color.green_btn_pressed);
         }
+    }
+
+    public void removeUserFromTeam(final Integer kickedUserId){
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseBody> call = apiService.kickUser(SharedPref.read(SharedPref.USER_ID, -1),
+                team.getId(), kickedUserId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    if(kickedUserId.equals(SharedPref.read(SharedPref.USER_ID, -1))){
+                        SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
+                        // TODO: clear chat db
+                        finish();
+                    }
+                    loadData();
+                }else{
+                    APIError error = ErrorUtils.parseError(response);
+                    Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(TeamActivity.this, "FAILED", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void loadData(){
@@ -174,7 +206,7 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                //TODO: send quit request to the server.
+                                removeUserFromTeam(SharedPref.read(SharedPref.USER_ID, -1));
                                 finish();
                             }
                         })

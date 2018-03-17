@@ -43,7 +43,9 @@ public interface ApiInterface {
     @POST("firebase_token")
     Call<ResponseBody> saveToken(@Header("userId") int userId, @Body String firebaseToken);
 
-
     @GET("team")
     Call<Team> getTeam(@Header("userId") int userId);
+
+    @POST("/teams/{teamId}/kick/{kickedUserId}")
+    Call<ResponseBody> kickUser(@Header("userId") int userId, @Path("teamId") int teamId, @Path("kickedUserId") int kickedUserId);
 }
