@@ -8,9 +8,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 
+import com.bil496.studifyapp.holder.TeamViewHolder;
+import com.bil496.studifyapp.holder.UserAtTeamViewHolder;
+import com.bil496.studifyapp.holder.UserViewHolder;
+import com.bil496.studifyapp.model.Team;
+import com.bil496.studifyapp.model.User;
+import com.bil496.studifyapp.util.SharedPref;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
+import com.unnamed.b.atv.model.TreeNode;
+import com.unnamed.b.atv.view.AndroidTreeView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +39,8 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
     FloatingActionButton quitBtn;
     @BindView(R.id.fab_action_show_requests)
     FloatingActionButton requestsBtn;
+    @BindView(R.id.container_layout)
+    RelativeLayout relativeLayout;
 
     boolean isNotificationOn = true;
 
@@ -41,10 +54,30 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
         quitBtn.setOnClickListener(this);
         requestsBtn.setOnClickListener(this);
 
+        // SILINECEK
+        Team team = (Team) getIntent().getSerializableExtra("team");
+        createTreeView(team.getUsers());
+        //SILINECEK
+//        Integer teamId = SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1);
+//        if(teamId == -1)
+//            finish();
+
+
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         ab.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    private void createTreeView(List<User> users){
+        TreeNode root = TreeNode.root();
+
+        for (User user : users){
+            TreeNode userNode = new TreeNode(new UserViewHolder.UserItem(user)).setViewHolder(new UserAtTeamViewHolder(this));
+            root.addChild(userNode);
+        }
+        relativeLayout.removeAllViews();
+        relativeLayout.addView(new AndroidTreeView(this, root).getView());
     }
 
     @Override

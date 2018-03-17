@@ -32,7 +32,7 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
     }
 
     @Override
-    public View createNodeView(final TreeNode node, TeamItem value) {
+    public View createNodeView(final TreeNode node, final TeamItem value) {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View view = inflater.inflate(R.layout.node_team, null, false);
         ButterKnife.bind(this, view);
@@ -66,6 +66,7 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TeamActivity.class);
+                intent.putExtra("team", value.team);
                 context.startActivity(intent);
             }
         });
