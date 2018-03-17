@@ -38,7 +38,7 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
         ButterKnife.bind(this, view);
         iconView.setIconText(context.getResources().getString(R.string.ic_people));
         teamNameLabel.setText(value.team.getName() + " ("+value.team.getUtilityScore()+")");
-        sizeLabel.setText(value.team.getUsers().size() + " people ");
+        sizeLabel.setText(value.team.getUsers().size() + (value.team.getUsers().size() == 1 ? " person" : " people "));
         final PrintView sendRequestView = view.findViewById(R.id.btn_sendRequest);
         if(value.team.getId() == SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1)){
             sendRequestView.setIconText(R.string.ic_verified_user);

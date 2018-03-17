@@ -38,7 +38,7 @@ public interface ApiInterface {
     Call<Integer> postTopic(@Path("location_id") long placeId, @Body Topic topic);
 
     @POST("topics/{topic_id}/teams")
-    Call<Team[]> createTeam(@Header("userId") int userId, @Path("topic_id") int topicId);
+    Call<Integer> createTeam(@Header("userId") int userId, @Path("topic_id") int topicId);
 
     @POST("firebase_token")
     Call<ResponseBody> saveToken(@Header("userId") int userId, @Body String firebaseToken);

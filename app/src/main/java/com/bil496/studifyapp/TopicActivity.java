@@ -29,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -103,14 +104,13 @@ public class TopicActivity extends AppCompatActivity {
             case R.id.action_add:
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
-                Call<Team[]> call2 = apiService.createTeam(userId, topicId);
-                call2.enqueue(new Callback<Team[]>() {
+                Call<Integer> call2 = apiService.createTeam(userId, topicId);
+                call2.enqueue(new Callback<Integer>() {
                     @Override
-                    public void onResponse(Call<Team[]> call, Response<Team[]> response) {
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
                         if(response.isSuccessful()){
-                            final List<Team> teams = new ArrayList<Team>(Arrays.asList(response.body()));
-                            createTreeView(teams);
-                            Log.d(TAG, response.toString());
+                            SharedPref.write(SharedPref.CURRENT_TEAM_ID, response.body());
+                            loadData();
                             refreshLayout.setRefreshing(false);
                         }else{
                             APIError error = ErrorUtils.parseError(response);
@@ -122,7 +122,7 @@ public class TopicActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Team[]> call, Throwable t) {
+                    public void onFailure(Call<Integer> call, Throwable t) {
                     }
                 });
                 return true;
