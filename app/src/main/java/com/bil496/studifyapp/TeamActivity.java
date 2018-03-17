@@ -50,6 +50,8 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout relativeLayout;
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.fab_action_locker)
+    FloatingActionButton lockerBtn;
 
     boolean isNotificationOn = true;
 
@@ -64,6 +66,7 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
         notificationsBtn.setOnClickListener(this);
         quitBtn.setOnClickListener(this);
         requestsBtn.setOnClickListener(this);
+        lockerBtn.setOnClickListener(this);
 
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
@@ -85,6 +88,15 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
         setTitle(team.getName());
         createTreeView(team.getUsers());
         refreshLayout.setRefreshing(false);
+        if(team.getLocked()){
+            lockerBtn.setIcon(R.drawable.ic_action_lock_closed);
+            lockerBtn.setColorNormalResId(R.color.grayish_btn);
+            lockerBtn.setColorPressedResId(R.color.grayish_btn_pressed);
+        }else{
+            lockerBtn.setIcon(R.drawable.ic_action_lock_open);
+            lockerBtn.setColorNormalResId(R.color.green_btn);
+            lockerBtn.setColorPressedResId(R.color.green_btn_pressed);
+        }
     }
 
     private void loadData(){
@@ -169,6 +181,33 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
                         .show();
                 break;
             case R.id.fab_action_show_requests:
+                break;
+            case R.id.fab_action_locker:
+                if(team.getLocked()){
+                    new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Are you sure?")
+                            .setContentText("Anyone be able to send join request!")
+                            .setConfirmText("Yes, unlock it!")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    //TODO: send unlock request to the server.
+                                }
+                            })
+                            .show();
+                }else{
+                    new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Are you sure?")
+                            .setContentText("Won't be able to get requests from others!")
+                            .setConfirmText("Yes, lock it!")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    //TODO: send lock request to the server.
+                                }
+                            })
+                            .show();
+                }
                 break;
             default:
                 break;

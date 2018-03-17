@@ -10,8 +10,19 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="80dp"
             android:id="@+id/container_layout"></RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_action_locker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        fab:fab_icon="@drawable/ic_action_lock_open"
+        fab:fab_colorNormal="@color/green_btn"
+        fab:fab_colorPressed="@color/green_btn_pressed"
+        android:layout_marginTop="8dp"/>
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/multiple_actions"
         android:layout_width="wrap_content"
