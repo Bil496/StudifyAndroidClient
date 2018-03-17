@@ -54,20 +54,15 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <com.dpizarro.autolabel.library.AutoLabelUI
-            android:id="@+id/label_view"
+        <com.nex3z.flowlayout.FlowLayout
+            android:id="@+id/chip_container"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            autolabel:icon_cross="@drawable/cross"
-            autolabel:label_background_res="@color/default_background_label"
-            autolabel:label_clickable="true"
-            autolabel:label_padding="5px"
-            autolabel:max_labels="10"
-            autolabel:show_cross="true"
-            autolabel:text_color="@android:color/white"
-            autolabel:text_size="@dimen/label_title_size">
-
-        </com.dpizarro.autolabel.library.AutoLabelUI>
+            app:flChildSpacing="auto"
+            app:flChildSpacingForLastRow="6dp"
+            app:flRowSpacing="6dp">
+        </com.nex3z.flowlayout.FlowLayout>
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
@@ -85,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_toStartOf="@+id/button"
+                android:maxLines="1"
                 android:hint="Talent Name" />
 
             <com.app.infideap.stylishwidget.view.AButton

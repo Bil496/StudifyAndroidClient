@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.infideap.stylishwidget.view.AButton;
@@ -16,8 +17,9 @@ import com.app.infideap.stylishwidget.view.AEditText;
 import com.app.infideap.stylishwidget.view.ATextInputEditText;
 import com.bil496.studifyapp.model.Subtopic;
 import com.bil496.studifyapp.model.Topic;
-import com.dpizarro.autolabel.library.AutoLabelUI;
-import com.dpizarro.autolabel.library.Label;
+import com.nex3z.flowlayout.FlowLayout;
+import com.robertlevonyan.views.chip.Chip;
+import com.robertlevonyan.views.chip.OnCloseClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,8 @@ public class TopicFormActivity extends AppCompatActivity {
     AEditText mEditText;
     @BindView(R.id.button)
     AButton mButton;
-    @BindView(R.id.label_view) AutoLabelUI autoLabelUI;
+    @BindView(R.id.chip_container)
+    FlowLayout chipContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,16 @@ public class TopicFormActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                autoLabelUI.addLabel(mEditText.getText().toString());
+                final Chip chip = new Chip(TopicFormActivity.this);
+                chip.setChipText(mEditText.getText().toString().trim());
+                chip.setClosable(true);
+                chipContainer.addView(chip);
+                chip.setOnCloseClickListener(new OnCloseClickListener() {
+                    @Override
+                    public void onCloseClick(View v) {
+                        chipContainer.removeView(chip);
+                    }
+                });
                 mEditText.setText("");
             }
         });
@@ -72,9 +84,10 @@ public class TopicFormActivity extends AppCompatActivity {
                 Topic topic = new Topic();
                 topic.setTitle(topicTitle.getText().toString().trim());
                 List<Subtopic> subtopics = new ArrayList<>();
-                for (Label label : autoLabelUI.getLabels()){
+                for(int i = 0; i < chipContainer.getChildCount(); i++) {
+                    Chip chip = (Chip) chipContainer.getChildAt(i);
                     Subtopic subtopic = new Subtopic();
-                    subtopic.setTitle(label.getText().trim());
+                    subtopic.setTitle(chip.getChipText());
                     subtopics.add(subtopic);
                 }
                 topic.setSize(0);
