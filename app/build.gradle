@@ -59,6 +59,8 @@ dependencies {
     implementation 'com.sergiocasero:notifikationmanager:0.1.0'
 
     implementation 'com.github.halysongoncalves:pugnotification:1.8.1'
+
+    implementation 'me.zhanghai.android.materialratingbar:library:1.2.0'
 }
 
 

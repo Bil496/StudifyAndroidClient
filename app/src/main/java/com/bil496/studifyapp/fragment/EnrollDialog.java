@@ -34,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,6 +82,7 @@ public class EnrollDialog extends DialogFragment {
                 public void onResponse(Call<ResponseBody>call, Response<ResponseBody> response) {
                     if(response.isSuccessful()) {
                         Log.d(TAG, response.toString());
+                        SharedPref.write(SharedPref.CURRENT_TOPIC_ID, topic.getId());
                         Intent intent = new Intent(getActivity(), TopicActivity.class);
                         intent.putExtra("topicId", topic.getId());
                         intent.putExtra("topicName", topic.getTitle());
@@ -133,7 +135,7 @@ public class EnrollDialog extends DialogFragment {
             parent.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             parent.setPadding(16, 16, 16, 16);
             parent.setOrientation(LinearLayout.VERTICAL);
-            RatingBar ratingBar = new RatingBar(getActivity());
+            MaterialRatingBar ratingBar = new MaterialRatingBar(getActivity());
             ratingBar.setStepSize(1f);
             ratingBar.setNumStars(5);
             TextView textView = new TextView(getActivity());

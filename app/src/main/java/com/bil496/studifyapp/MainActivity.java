@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View v, int position) {
                         final Topic topic = topics.get(position);
-                        if(topic.getId() != SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1)){
+                        if(topic.getId().equals(SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1)) == false){
                             if (SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1){
                                 new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
                                         .setTitleText("You are currently in a team?")
