@@ -42,4 +42,8 @@ public interface ApiInterface {
 
     @POST("firebase_token")
     Call<ResponseBody> saveToken(@Header("userId") int userId, @Body String firebaseToken);
+
+
+    @GET("team")
+    Call<Team> getTeam(@Header("userId") int userId);
 }

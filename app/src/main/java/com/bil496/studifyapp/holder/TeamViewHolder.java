@@ -66,7 +66,6 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, TeamActivity.class);
-                intent.putExtra("team", value.team);
                 context.startActivity(intent);
             }
         });
