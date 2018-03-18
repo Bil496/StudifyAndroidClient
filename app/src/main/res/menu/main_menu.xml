@@ -12,6 +12,11 @@
         appname:showAsAction="always|collapseActionView"
         app:showAsAction="always|collapseActionView" />
     <item
+        android:id="@+id/action_reset"
+        android:orderInCategory="100"
+        android:title="Reset (for Demo)"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_change_place"
         android:orderInCategory="100"
         android:title="Change Place"

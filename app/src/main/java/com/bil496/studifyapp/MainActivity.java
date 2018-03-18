@@ -113,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent1);
                 finish();
                 return true;
+            case R.id.action_reset:
+                SharedPref.clear();
+                startActivity(new Intent(this, IntroActivity.class));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

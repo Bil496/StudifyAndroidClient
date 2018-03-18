@@ -57,4 +57,8 @@ public class SharedPref {
         SharedPreferences.Editor prefsEditor = mSharedPref.edit();
         prefsEditor.putInt(key, value).commit();
     }
+
+    public static void clear(){
+        mSharedPref.edit().clear().commit();
+    }
 }
