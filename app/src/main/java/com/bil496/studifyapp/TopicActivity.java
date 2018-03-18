@@ -141,8 +141,13 @@ public class TopicActivity extends AppCompatActivity {
         call.clone().enqueue(new Callback<Team[]>() {
             @Override
             public void onResponse(Call<Team[]>call, Response<Team[]> response) {
-                final List<Team> teams = new ArrayList<Team>(Arrays.asList(response.body()));
-                createTreeView(teams);
+                if(response.isSuccessful()){
+                    final List<Team> teams = new ArrayList<Team>(Arrays.asList(response.body()));
+                    createTreeView(teams);
+                }else{
+                    APIError error = ErrorUtils.parseError(response);
+                    Toast.makeText(TopicActivity.this, error.message(), Toast.LENGTH_LONG).show();
+                }
                 Log.d(TAG, response.toString());
                 refreshLayout.setRefreshing(false);
             }
