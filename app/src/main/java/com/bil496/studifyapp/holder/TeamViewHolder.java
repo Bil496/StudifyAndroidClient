@@ -11,16 +11,25 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.TeamActivity;
 import com.bil496.studifyapp.model.Team;
+import com.bil496.studifyapp.rest.APIError;
+import com.bil496.studifyapp.rest.ApiClient;
+import com.bil496.studifyapp.rest.ApiInterface;
+import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
 import com.github.johnkil.print.PrintView;
 import com.unnamed.b.atv.model.TreeNode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.TeamItem> {
     @BindView(R.id.arrow_icon) PrintView arrowView;
@@ -50,15 +59,35 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
             sendRequestView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sendRequestView.setIconText(R.string.ic_done);
                     sendRequestView.setClickable(false);
-                    // TODO: Send request
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            sendRequestView.setIconText(R.string.ic_done_all);
+
+                    ApiInterface apiService =
+                            ApiClient.getClient().create(ApiInterface.class);
+                    Call<Integer> call = apiService.postJoinRequest(SharedPref.read(SharedPref.USER_ID, -1), value.team.getId());
+                    call.enqueue(new Callback<Integer>() {
+                        @Override
+                        public void onResponse(Call<Integer> call, Response<Integer> response) {
+                            if(response.isSuccessful()){
+                                sendRequestView.setIconText(R.string.ic_done);
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    public void run() {
+                                        sendRequestView.setIconText(R.string.ic_done_all);
+                                    }
+                                }, 2000);
+                            }else{
+                                APIError error = ErrorUtils.parseError(response);
+                                Toast.makeText(context, error.message(), Toast.LENGTH_LONG).show();
+                                sendRequestView.setClickable(true);
+                            }
                         }
-                    }, 2000);
+
+                        @Override
+                        public void onFailure(Call<Integer> call, Throwable t) {
+                            Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
+                            sendRequestView.setClickable(true);
+                        }
+                    });
                 }
             });
         }

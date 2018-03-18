@@ -54,4 +54,7 @@ public interface ApiInterface {
 
     @POST("/teams/{teamId}/unlock")
     Call<ResponseBody> unlockTeam(@Header("userId") int userId, @Path("teamId") int teamId);
+
+    @POST("/teams/{teamId}")
+    Call<Integer> postJoinRequest(@Header("userId") int userId, @Path("teamId") int teamId);
 }
