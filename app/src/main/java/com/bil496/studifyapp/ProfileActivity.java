@@ -27,7 +27,7 @@ import retrofit2.Response;
  * Created by burak on 3/16/2018.
  */
 
-public class ProfileActivity extends AppCompatActivity{
+public class ProfileActivity extends AbstractObservableActivity{
     @BindView(R.id.profile_pp)
     ImageView profielPicView;
     @BindView(R.id.profile_current_team) TextView currentTeamView;

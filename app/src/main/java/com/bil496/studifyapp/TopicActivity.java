@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bil496.studifyapp.holder.TeamViewHolder;
 import com.bil496.studifyapp.holder.UserViewHolder;
+import com.bil496.studifyapp.model.Payload;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.rest.APIError;
@@ -38,7 +39,7 @@ import retrofit2.Response;
  * Created by burak on 3/12/2018.
  */
 
-public class TopicActivity extends AppCompatActivity {
+public class TopicActivity extends AbstractObservableActivity {
     private static final String TAG = TopicActivity.class.getSimpleName();
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
@@ -164,5 +165,15 @@ public class TopicActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadData();
+    }
+
+    @Override
+    protected void onNotification(Payload payload) {
+        super.onNotification(payload);
+        switch (payload.getType()) {
+            case KICKED:
+                loadData();
+                break;
+        }
     }
 }

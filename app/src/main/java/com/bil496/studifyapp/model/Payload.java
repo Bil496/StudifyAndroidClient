@@ -2,6 +2,7 @@ package com.bil496.studifyapp.model;
 
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ public class Payload implements Serializable {
     }
     private Type type;
     private Serializable payloadData;
+    private Notification notification;
 
     public Type getType() {
         return type;
@@ -34,5 +36,17 @@ public class Payload implements Serializable {
 
     public <T> void setPayloadData(String json, Class<T> classOfT) {
         this.payloadData = (Serializable) gson.fromJson(json, classOfT);
+    }
+
+    public void setPayloadData(Serializable payloadData) {
+        this.payloadData = payloadData;
+    }
+
+    public Notification getNotification() {
+        return notification;
+    }
+
+    public void setNotification(RemoteMessage.Notification notification) {
+        this.notification = new Notification(notification.getTitle(), notification.getBody());
     }
 }

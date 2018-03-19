@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.bil496.studifyapp.holder.TeamViewHolder;
 import com.bil496.studifyapp.holder.UserAtTeamViewHolder;
 import com.bil496.studifyapp.holder.UserViewHolder;
+import com.bil496.studifyapp.model.Payload;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.rest.APIError;
@@ -41,7 +42,7 @@ import retrofit2.Response;
  * Created by burak on 3/16/2018.
  */
 
-public class TeamActivity extends AppCompatActivity implements View.OnClickListener{
+public class TeamActivity extends AbstractObservableActivity implements View.OnClickListener{
     @BindView(R.id.fab_action_chat)
     FloatingActionButton chatBtn;
     @BindView(R.id.fab_action_notifications)
@@ -161,7 +162,7 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void loadData(){
+    protected void loadData(){
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
         Call<Team> call = apiService.getTeam(SharedPref.read(SharedPref.USER_ID, -1));
@@ -278,6 +279,16 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             default:
+                break;
+        }
+    }
+    @Override
+    protected void onNotification(Payload payload) {
+        super.onNotification(payload);
+        switch (payload.getType()) {
+            case KICKED:
+                if(payload.getPayloadData(Team.class).getId().equals(team.getId()))
+                    finish();
                 break;
         }
     }

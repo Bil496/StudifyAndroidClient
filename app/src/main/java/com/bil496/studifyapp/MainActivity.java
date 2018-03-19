@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +19,7 @@ import com.app.infideap.stylishwidget.view.Stylish;
 import com.bil496.studifyapp.adapter.CustomItemClickListener;
 import com.bil496.studifyapp.adapter.TopicAdapter;
 import com.bil496.studifyapp.fragment.EnrollDialog;
+import com.bil496.studifyapp.model.Payload;
 import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.rest.APIError;
 import com.bil496.studifyapp.rest.ApiClient;
@@ -33,6 +33,8 @@ import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +47,7 @@ import retrofit2.Response;
  * Created by burak on 3/11/2018.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AbstractObservableActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
@@ -223,6 +225,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+        }
+    }
+
+    @Override
+    protected void onNotification(Payload payload) {
+        super.onNotification(payload);
+        switch (payload.getType()) {
+            case KICKED:
+                // TODO: remove team button view
+                break;
         }
     }
 }

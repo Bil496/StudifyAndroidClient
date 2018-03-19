@@ -57,4 +57,11 @@ public interface ApiInterface {
 
     @POST("/teams/{teamId}")
     Call<Integer> postJoinRequest(@Header("userId") int userId, @Path("teamId") int teamId);
+
+    @POST("requests/{requestId}/accept")
+    Call<ResponseBody> postAcceptRequest(@Header("userId") int userId, @Path("requestId") int requestId);
+
+
+    @POST("requests/{requestId}/deny")
+    Call<ResponseBody> postDenyRequest(@Header("userId") int userId, @Path("requestId") int requestId);
 }

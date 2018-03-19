@@ -39,18 +39,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Payload payload = new Payload();
 
             payload.setType(Payload.Type.valueOf(remoteMessage.getData().get("type")));
+            payload.setNotification(remoteMessage.getNotification());
             String jsonString = remoteMessage.getData().get("payload");
             switch (payload.getType()){
                 case JOIN_REQUEST:
-                    payload.setPayloadData(jsonString, User.class);
+                    try {
+                        JSONObject obj = new JSONObject(jsonString);
+                        payload.setPayloadData(new Integer(obj.getInt("id")));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     activityToStart = TeamActivity.class;
                     bundleOfActivity = new Bundle();
-                    bundleOfActivity.putSerializable("requester", payload.getPayloadData(User.class));
+                    bundleOfActivity.putSerializable("requestId", payload.getPayloadData(Integer.class));
+                    bundleOfActivity.putSerializable("notification", payload.getNotification());
                     break;
                 case ACCEPTED:
                     payload.setPayloadData(jsonString, Team.class);
                     activityToStart = TeamActivity.class;
-                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, ((Team)payload.getPayloadData(Team.class)).getId());
+                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, payload.getPayloadData(Team.class).getId());
                     break;
                 case DENIED:
                     // Payload comes null
@@ -59,6 +66,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     payload.setPayloadData(jsonString, Team.class);
                     activityToStart = TopicActivity.class;
                     SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
+                    bundleOfActivity = new Bundle();
+                    bundleOfActivity.putStringArray("dialog", new String[]{
+                            remoteMessage.getNotification().getTitle(),
+                            remoteMessage.getNotification().getBody()}
+                    );
                     break;
                 case FOLLOWED:
                     // Not supported yet
