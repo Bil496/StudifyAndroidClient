@@ -51,12 +51,15 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
         sizeLabel.setText(value.team.getUsers().size() + (value.team.getUsers().size() == 1 ? " person" : " people "));
         final PrintView sendRequestView = view.findViewById(R.id.btn_sendRequest);
         boolean waitingRequest = false;
-        for (JoinRequest request : value.team.getRequests()){
-            if (request.getUser().getId().equals(SharedPref.read(SharedPref.USER_ID, -1))){
-                waitingRequest = true;
-                break;
+        if(value.team.getRequests() != null){
+            for (JoinRequest request : value.team.getRequests()){
+                if (request.getUser().getId().equals(SharedPref.read(SharedPref.USER_ID, -1))){
+                    waitingRequest = true;
+                    break;
+                }
             }
         }
+
         if (waitingRequest){
             sendRequestView.setIconText(R.string.ic_done_all);
             sendRequestView.setClickable(false);
