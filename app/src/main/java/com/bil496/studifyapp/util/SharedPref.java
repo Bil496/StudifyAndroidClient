@@ -59,6 +59,9 @@ public class SharedPref {
     }
 
     public static void clear(){
+        String firebaseToken = SharedPref.read(SharedPref.FIREBASE_TOKEN, "");
         mSharedPref.edit().clear().commit();
+        if(firebaseToken.length() > 0)
+            SharedPref.write(SharedPref.FIREBASE_TOKEN, firebaseToken);
     }
 }
