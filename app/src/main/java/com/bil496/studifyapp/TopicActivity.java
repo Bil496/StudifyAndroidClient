@@ -172,6 +172,7 @@ public class TopicActivity extends AbstractObservableActivity {
         super.onNotification(payload);
         switch (payload.getType()) {
             case KICKED:
+            case DENIED:
                 loadData();
                 break;
         }
