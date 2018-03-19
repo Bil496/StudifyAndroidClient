@@ -239,7 +239,7 @@
     <string name="ic_location_city">&#xe0da;</string>
     <string name="ic_location_disabled">&#xe0db;</string>
     <string name="ic_location_searching">&#xe0dc;</string>
-    <string name="ic_lock">&#xe0dd;</string>
+    <string name="ic_lock">&#xE897;</string>
     <string name="ic_lock_open">&#xe0de;</string>
     <string name="ic_lock_outline">&#xe0df;</string>
     <string name="ic_loop">&#xe0e0;</string>
