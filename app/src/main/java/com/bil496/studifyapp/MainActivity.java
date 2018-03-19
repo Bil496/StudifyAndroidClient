@@ -25,6 +25,8 @@ import com.bil496.studifyapp.rest.APIError;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.rest.ErrorUtils;
+import com.bil496.studifyapp.service.DeleteTokenService;
+import com.bil496.studifyapp.service.UpdateCurrentInfoService;
 import com.bil496.studifyapp.util.SharedPref;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 fontFolder.concat("Bold.ttf"),
                 fontFolder.concat("Italic.ttf"),
                 fontFolder.concat("BoldItalic.ttf"));
+        startService(new Intent(this, DeleteTokenService.class));
+        startService(new Intent(this, UpdateCurrentInfoService.class));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);

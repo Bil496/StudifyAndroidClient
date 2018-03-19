@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.TeamActivity;
+import com.bil496.studifyapp.model.JoinRequest;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.rest.APIError;
 import com.bil496.studifyapp.rest.ApiClient;
@@ -49,7 +50,18 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
         teamNameLabel.setText(value.team.getName() + " ("+value.team.getUtilityScore()+")");
         sizeLabel.setText(value.team.getUsers().size() + (value.team.getUsers().size() == 1 ? " person" : " people "));
         final PrintView sendRequestView = view.findViewById(R.id.btn_sendRequest);
-        if(value.team.getId() == SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1)){
+        boolean waitingRequest = false;
+        for (JoinRequest request : value.team.getRequests()){
+            if (request.getUser().getId().equals(SharedPref.read(SharedPref.USER_ID, -1))){
+                waitingRequest = true;
+                break;
+            }
+        }
+        if (waitingRequest){
+            sendRequestView.setIconText(R.string.ic_done_all);
+            sendRequestView.setClickable(false);
+        }
+        else if(value.team.getId() == SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1)){
             sendRequestView.setIconText(R.string.ic_verified_user);
         }
         else if(value.team.getLocked()){

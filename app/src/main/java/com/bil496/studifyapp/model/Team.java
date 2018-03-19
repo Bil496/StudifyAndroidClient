@@ -20,6 +20,8 @@ public class Team implements Serializable {
     private Boolean isLocked;
     @SerializedName("members")
     private List<User> users;
+    @SerializedName("requests")
+    private List<JoinRequest> requests;
 
     public Integer getId() {
         return id;
@@ -59,5 +61,13 @@ public class Team implements Serializable {
 
     public void setLocked(Boolean locked) {
         isLocked = locked;
+    }
+
+    public List<JoinRequest> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<JoinRequest> requests) {
+        this.requests = requests;
     }
 }

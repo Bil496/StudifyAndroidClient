@@ -168,8 +168,12 @@ public class TeamActivity extends AppCompatActivity implements View.OnClickListe
         call.enqueue(new Callback<Team>() {
             @Override
             public void onResponse(Call<Team> call, Response<Team> response) {
-                team = response.body();
-                updateViews();
+                if(response.isSuccessful()){
+                    team = response.body();
+                    updateViews();
+                }else {
+                    finish();
+                }
             }
 
             @Override

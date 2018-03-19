@@ -61,7 +61,6 @@ public class TopicActivity extends AppCompatActivity {
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
         call = apiService.getTeams(userId, topicId);
-        loadData();
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -159,5 +158,11 @@ public class TopicActivity extends AppCompatActivity {
                 refreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
     }
 }

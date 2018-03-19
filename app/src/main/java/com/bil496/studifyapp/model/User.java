@@ -13,7 +13,7 @@ public class User implements Serializable{
     private Integer id;
     @SerializedName("name")
     private String name;
-    @SerializedName("userName")
+    @SerializedName("username")
     private String username;
     @SerializedName("profilePic")
     private String profilePic;
@@ -21,6 +21,8 @@ public class User implements Serializable{
     private Topic currentTopic;
     @SerializedName("currentTeam")
     private Team currentTeam;
+    @SerializedName("token")
+    private String token;
 
     public User(Integer id, String name, String username, String profilePic) {
         this.id = id;
@@ -75,5 +77,13 @@ public class User implements Serializable{
 
     public void setCurrentTeam(Team currentTeam) {
         this.currentTeam = currentTeam;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
