@@ -1,15 +1,22 @@
 package com.bil496.studifyapp.service;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.bil496.studifyapp.IntroActivity;
 import com.bil496.studifyapp.R;
-import com.bil496.studifyapp.model.PayloadType;
+import com.bil496.studifyapp.TeamActivity;
+import com.bil496.studifyapp.TopicActivity;
+import com.bil496.studifyapp.model.Payload;
+import com.bil496.studifyapp.model.Team;
+import com.bil496.studifyapp.model.User;
+import com.bil496.studifyapp.util.SharedPref;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.sergiocasero.notifikationmanager.NotifikationManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import br.com.goncalves.pugnotification.notification.Load;
 import br.com.goncalves.pugnotification.notification.PugNotification;
@@ -20,7 +27,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // If an activity should start when clicking on the notification, set by payload type.
@@ -30,27 +36,49 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            PayloadType payloadType = PayloadType.valueOf(remoteMessage.getData().get("type"));
+            Payload payload = new Payload();
+
+            payload.setType(Payload.Type.valueOf(remoteMessage.getData().get("type")));
             String jsonString = remoteMessage.getData().get("payload");
-            switch (payloadType){
+            switch (payload.getType()){
                 case JOIN_REQUEST:
+                    payload.setPayloadData(jsonString, User.class);
+                    activityToStart = TeamActivity.class;
+                    bundleOfActivity = new Bundle();
+                    bundleOfActivity.putSerializable("requester", payload.getPayloadData(User.class));
                     break;
                 case ACCEPTED:
+                    payload.setPayloadData(jsonString, Team.class);
+                    activityToStart = TeamActivity.class;
+                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, ((Team)payload.getPayloadData(Team.class)).getId());
                     break;
                 case DENIED:
+                    // Payload comes null
                     break;
                 case KICKED:
+                    payload.setPayloadData(jsonString, Team.class);
+                    activityToStart = TopicActivity.class;
+                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
                     break;
                 case FOLLOWED:
+                    // Not supported yet
                     break;
                 case CHAT_MESSAGE:
+                    try {
+                        JSONObject obj = new JSONObject(jsonString);
+                        payload.setPayloadData(obj.getString("chatMessage"), String.class);
+                        // activityToStart = ChatActivity.class;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     Log.e(TAG, "Unknown payload type came.");
                     break;
 
             }
-            // TODO: Send data to database or foreground
+            NotifikationManager.INSTANCE.notify(payload);
+            // TODO: Send data to database
         }
 
         // Check if message contains a notification payload.
