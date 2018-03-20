@@ -6,6 +6,7 @@ import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.Topic;
 import com.bil496.studifyapp.model.User;
 
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -41,7 +42,7 @@ public interface ApiInterface {
     Call<Integer> createTeam(@Header("userId") int userId, @Path("topic_id") int topicId);
 
     @POST("firebase_token")
-    Call<ResponseBody> saveToken(@Header("userId") int userId, @Body String firebaseToken);
+    Call<ResponseBody> saveToken(@Header("userId") int userId, @Body RequestBody firebaseToken);
 
     @GET("team")
     Call<Team> getTeam(@Header("userId") int userId);
@@ -65,5 +66,5 @@ public interface ApiInterface {
     Call<ResponseBody> postDenyRequest(@Header("userId") int userId, @Path("requestId") int requestId);
 
     @POST("sendMessage")
-    Call<ResponseBody> sendMessage(@Header("userId") int userId, @Body String chatMessage);
+    Call<ResponseBody> sendMessage(@Header("userId") int userId, @Body RequestBody chatMessage);
 }

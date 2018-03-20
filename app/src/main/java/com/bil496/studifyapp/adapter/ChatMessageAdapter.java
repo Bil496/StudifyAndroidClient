@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +30,7 @@ import me.himanshusoni.chatmessageview.ChatMessageView;
 
 public class ChatMessageAdapter extends RealmRecyclerViewAdapter<ChatMessage> {
     private final String TAG = "ChatMessageAdapter";
-    private static final int MY_MESSAGE = 0, OTHER_MESSAGE = 1;
+    private static final int MY_MESSAGE = 0, OTHER_MESSAGE = 1, OTHER_MESSAGE_SEQUENCE = 2;
 
     private Context mContext;
     private Realm realm;
@@ -51,9 +52,13 @@ public class ChatMessageAdapter extends RealmRecyclerViewAdapter<ChatMessage> {
     @Override
     public int getItemViewType(int position) {
         ChatMessage item = getItem(position);
-
         if (item.isMine()) return MY_MESSAGE;
-        else return OTHER_MESSAGE;
+        else{
+            if(position == 0 || !getItem(position - 1).getSenderName().equals(item.getSenderName()))
+                return OTHER_MESSAGE;
+            else
+                return OTHER_MESSAGE_SEQUENCE;
+        }
     }
 
     @Override
@@ -76,12 +81,17 @@ public class ChatMessageAdapter extends RealmRecyclerViewAdapter<ChatMessage> {
         holder.tvTime.setText(date);
 
         if(chatMessage.isMine() == false){
-            holder.tvSenderName.setText(chatMessage.getSenderName());
-            Picasso.get()
-                    .load(chatMessage.getSenderImage())
-                    .placeholder(R.drawable.user)
-                    .error(R.drawable.user)
-                    .into(holder.ivSenderImage);
+            if (viewHolder.getItemViewType() == OTHER_MESSAGE){
+                holder.tvSenderName.setText(chatMessage.getSenderName());
+                Picasso.get()
+                        .load(chatMessage.getSenderImage())
+                        .placeholder(R.drawable.user)
+                        .error(R.drawable.user)
+                        .into(holder.ivSenderImage);
+            }else{
+                holder.tvSenderName.setVisibility(View.GONE);
+                holder.ivSenderImage.setVisibility(View.GONE);
+            }
         }
 
         holder.chatMessageView.setOnClickListener(new View.OnClickListener() {

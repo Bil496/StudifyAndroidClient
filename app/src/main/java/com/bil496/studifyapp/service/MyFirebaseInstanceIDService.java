@@ -12,6 +12,8 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +51,9 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     private void sendRegistrationToServer(Integer userId, String refreshedToken){
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
-        Call<ResponseBody> call = apiService.saveToken(userId, refreshedToken);
+        RequestBody body =
+                RequestBody.create(MediaType.parse("text/plain"), refreshedToken);
+        Call<ResponseBody> call = apiService.saveToken(userId, body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

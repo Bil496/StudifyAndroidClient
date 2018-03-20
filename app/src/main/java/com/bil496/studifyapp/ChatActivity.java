@@ -27,6 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -121,7 +123,9 @@ public class ChatActivity extends AbstractObservableActivity {
     private void sendMessage(final String message) {
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
-        Call<ResponseBody> call = apiService.sendMessage(SharedPref.read(SharedPref.USER_ID, -1), message);
+        RequestBody body =
+                RequestBody.create(MediaType.parse("text/plain"), message);
+        Call<ResponseBody> call = apiService.sendMessage(SharedPref.read(SharedPref.USER_ID, -1), body);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

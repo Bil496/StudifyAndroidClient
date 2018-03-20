@@ -9,41 +9,48 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <com.github.johnkil.print.PrintView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:iconText="@string/ic_trending_up"
-            app:iconColor="#12558C"
-            app:iconFont="fonts/material-icon-font.ttf"
-            app:iconSize="24dp"/>
-        <com.app.infideap.stylishwidget.view.ATextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Hot Topics In Your Location"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold" />
-    </LinearLayout>
 
-    <android.support.v4.widget.Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorLine" />
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:scrollbars="vertical"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.github.johnkil.print.PrintView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconText="@string/ic_trending_up"
+                    app:iconColor="#12558C"
+                    app:iconFont="fonts/material-icon-font.ttf"
+                    app:iconSize="24dp"/>
+                <com.app.infideap.stylishwidget.view.ATextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="Hot Topics In Your Location"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/colorLine" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

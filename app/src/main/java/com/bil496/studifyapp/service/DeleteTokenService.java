@@ -13,6 +13,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
@@ -42,7 +44,9 @@ public class DeleteTokenService extends IntentService {
         }else{
             ApiInterface apiService =
                     ApiClient.getClient().create(ApiInterface.class);
-            Call<ResponseBody> call = apiService.saveToken(SharedPref.read(SharedPref.USER_ID, -1), originalToken);
+            RequestBody body =
+                    RequestBody.create(MediaType.parse("text/plain"), originalToken);
+            Call<ResponseBody> call = apiService.saveToken(SharedPref.read(SharedPref.USER_ID, -1), body);
             try {
                 call.execute();
             } catch (IOException e) {
