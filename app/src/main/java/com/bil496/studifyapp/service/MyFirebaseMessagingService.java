@@ -4,12 +4,15 @@ import android.app.Notification;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.bil496.studifyapp.ChatActivity;
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.TeamActivity;
 import com.bil496.studifyapp.TopicActivity;
+import com.bil496.studifyapp.model.ChatMessage;
 import com.bil496.studifyapp.model.Payload;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.User;
+import com.bil496.studifyapp.realm.RealmController;
 import com.bil496.studifyapp.util.SharedPref;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -20,6 +23,7 @@ import org.json.JSONObject;
 
 import br.com.goncalves.pugnotification.notification.Load;
 import br.com.goncalves.pugnotification.notification.PugNotification;
+import io.realm.Realm;
 
 import static android.content.ContentValues.TAG;
 
@@ -78,8 +82,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 case CHAT_MESSAGE:
                     try {
                         JSONObject obj = new JSONObject(jsonString);
-                        payload.setPayloadData(obj.getString("chatMessage"), String.class);
-                        // activityToStart = ChatActivity.class;
+                        ChatMessage chatMessage = new ChatMessage(obj.getString("chatMessage"),
+                                obj.getString("senderName"),
+                                obj.getString("senderImage"));
+                        Realm realm = Realm.getDefaultInstance();
+                        chatMessage.setId((int) realm.where(ChatMessage.class).count());
+                        realm.beginTransaction();
+                        realm.copyToRealm(chatMessage);
+                        realm.commitTransaction();
+                        payload.setPayloadData(chatMessage);
+                        activityToStart = ChatActivity.class;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -90,7 +102,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             }
             NotifikationManager.INSTANCE.notify(payload);
-            // TODO: Send data to database
         }
 
         // Check if message contains a notification payload.

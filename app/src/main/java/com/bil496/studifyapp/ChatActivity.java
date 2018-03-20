@@ -2,25 +2,35 @@ package com.bil496.studifyapp;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
+import com.app.infideap.stylishwidget.view.AButton;
 import com.bil496.studifyapp.adapter.ChatMessageAdapter;
 import com.bil496.studifyapp.adapter.RealmMessagesAdapter;
 import com.bil496.studifyapp.model.ChatMessage;
+import com.bil496.studifyapp.model.Payload;
 import com.bil496.studifyapp.realm.RealmController;
-
-import java.util.ArrayList;
+import com.bil496.studifyapp.rest.ApiClient;
+import com.bil496.studifyapp.rest.ApiInterface;
+import com.bil496.studifyapp.util.SharedPref;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by burak on 3/20/2018.
@@ -28,7 +38,8 @@ import io.realm.RealmResults;
 
 public class ChatActivity extends AbstractObservableActivity {
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
-    @BindView(R.id.btn_send) Button mButtonSend;
+    @BindView(R.id.btn_send)
+    AButton mButtonSend;
     @BindView(R.id.et_message) EditText mEditTextMessage;
 
     private ChatMessageAdapter adapter;
@@ -58,6 +69,33 @@ public class ChatActivity extends AbstractObservableActivity {
                 mEditTextMessage.setText("");
             }
         });
+
+        final ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        ab.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chat_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_clear_chat:
+                RealmController.with(this).clearAll();
+                adapter.notifyDataSetChanged();
+                break;
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 
     public void setRealmAdapter(RealmResults<ChatMessage> messages) {
@@ -80,17 +118,52 @@ public class ChatActivity extends AbstractObservableActivity {
         mRecyclerView.setAdapter(adapter);
     }
 
-    private void sendMessage(String message) {
-        ChatMessage chatMessage = new ChatMessage(message);
-        chatMessage.setId(RealmController.getInstance().getMessages().size());
-        RealmController.with(this).addMessage(chatMessage);
-        adapter.notifyDataSetChanged();
-        // scroll the recycler view to bottom
-        mRecyclerView.scrollToPosition(chatMessage.getId());
+    private void sendMessage(final String message) {
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+        Call<ResponseBody> call = apiService.sendMessage(SharedPref.read(SharedPref.USER_ID, -1), message);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    ChatMessage chatMessage = new ChatMessage(message);
+                    chatMessage.setId(RealmController.getInstance().getMessagesCount());
+                    RealmController.with(ChatActivity.this).addMessage(chatMessage);
+                    adapter.notifyDataSetChanged();
+                    // scroll the recycler view to bottom
+                    mRecyclerView.scrollToPosition(chatMessage.getId());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 
-    private void recieveMessage(String message) {
-        //ChatMessage chatMessage = new ChatMessage(message, true, false);
-        //mAdapter.add(chatMessage);
+    private void recieveMessage() {
+        adapter.notifyDataSetChanged();
+        // scroll the recycler view to bottom
+        mRecyclerView.scrollToPosition(RealmController.getInstance().getMessagesCount() - 1);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mRecyclerView.scrollToPosition(RealmController.getInstance().getMessagesCount() - 1);
+    }
+
+    @Override
+    protected void onNotification(Payload payload) {
+        super.onNotification(payload);
+        if(payload.getType() == Payload.Type.CHAT_MESSAGE){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    recieveMessage();
+                }
+            });
+        }
     }
 }

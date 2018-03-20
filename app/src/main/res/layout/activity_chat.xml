@@ -30,10 +30,11 @@
             android:layout_weight="1"
             android:inputType="text" />
 
-        <Button
+        <com.app.infideap.stylishwidget.view.AButton
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/Button.Dark"
             android:text="Send" />
     </LinearLayout>
 

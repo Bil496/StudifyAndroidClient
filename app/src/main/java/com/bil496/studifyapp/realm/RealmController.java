@@ -83,6 +83,10 @@ public class RealmController {
         return realm.where(ChatMessage.class).findAll();
     }
 
+    public int getMessagesCount() {
+        return realm.where(ChatMessage.class).findAll().size();
+    }
+
     //check if ChatMessage.class is empty
     public boolean hasMessage() {
 

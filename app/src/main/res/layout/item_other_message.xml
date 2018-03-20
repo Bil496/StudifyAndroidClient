@@ -12,13 +12,14 @@
         android:gravity="center">
         <ImageView
             android:id="@+id/sender_image"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:minHeight="45dp"/>
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:minHeight="35dp"/>
         <TextView
             android:id="@+id/sender_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:text="Burak Uyar"
             android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />

@@ -61,7 +61,9 @@ public interface ApiInterface {
     @POST("requests/{requestId}/accept")
     Call<ResponseBody> postAcceptRequest(@Header("userId") int userId, @Path("requestId") int requestId);
 
-
     @POST("requests/{requestId}/deny")
     Call<ResponseBody> postDenyRequest(@Header("userId") int userId, @Path("requestId") int requestId);
+
+    @POST("sendMessage")
+    Call<ResponseBody> sendMessage(@Header("userId") int userId, @Body String chatMessage);
 }
