@@ -1,5 +1,6 @@
 package com.bil496.studifyapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -220,6 +221,7 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fab_action_chat:
+                startActivity(new Intent(this, ChatActivity.class));
                 break;
             case R.id.fab_action_notifications:
                 isNotificationOn = !isNotificationOn;

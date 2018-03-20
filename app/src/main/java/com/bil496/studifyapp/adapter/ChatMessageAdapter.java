@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.model.ChatMessage;
+import com.bil496.studifyapp.realm.RealmController;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -19,32 +20,37 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import me.himanshusoni.chatmessageview.ChatMessageView;
 
 /**
  * Created by burak on 3/20/2018.
  */
 
-public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.MessageHolder> {
+public class ChatMessageAdapter extends RealmRecyclerViewAdapter<ChatMessage> {
     private final String TAG = "ChatMessageAdapter";
     private static final int MY_MESSAGE = 0, OTHER_MESSAGE = 1;
 
-    private List<ChatMessage> mMessages;
     private Context mContext;
+    private Realm realm;
+    private LayoutInflater inflater;
 
-    public ChatMessageAdapter(Context context, List<ChatMessage> data) {
+    public ChatMessageAdapter(Context context) {
         mContext = context;
-        mMessages = data;
+        realm = RealmController.getInstance().getRealm();
     }
 
     @Override
     public int getItemCount() {
-        return mMessages == null ? 0 : mMessages.size();
+        if (getRealmAdapter() != null) {
+            return getRealmAdapter().getCount();
+        }
+        return 0;
     }
 
     @Override
     public int getItemViewType(int position) {
-        ChatMessage item = mMessages.get(position);
+        ChatMessage item = getItem(position);
 
         if (item.isMine()) return MY_MESSAGE;
         else return OTHER_MESSAGE;
@@ -59,14 +65,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         }
     }
 
-    public void add(ChatMessage message) {
-        mMessages.add(message);
-        notifyItemInserted(mMessages.size() - 1);
-    }
-
     @Override
-    public void onBindViewHolder(final MessageHolder holder, final int position) {
-        ChatMessage chatMessage = mMessages.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+        // cast the generic view holder to our specific one
+        final MessageHolder holder = (MessageHolder) viewHolder;
+
+        ChatMessage chatMessage = getItem(position);
         holder.tvMessage.setText(chatMessage.getContent());
         String date = new SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(new Date());
         holder.tvTime.setText(date);
@@ -88,7 +92,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         });
     }
 
-    class MessageHolder extends RecyclerView.ViewHolder {
+    public static class MessageHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.chatMessageView)
         ChatMessageView chatMessageView;
         @BindView(R.id.tv_message)

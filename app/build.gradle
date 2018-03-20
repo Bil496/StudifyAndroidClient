@@ -10,6 +10,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
     }
     buildTypes {
         release {
@@ -66,6 +71,8 @@ dependencies {
     implementation 'com.robertlevonyan.view:MaterialChipView:1.2.1'
 
     implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
+
+    implementation 'io.realm:realm-android:0.82.1'
 
 }
 

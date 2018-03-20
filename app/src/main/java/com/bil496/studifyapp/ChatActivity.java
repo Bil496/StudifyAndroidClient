@@ -11,12 +11,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.bil496.studifyapp.adapter.ChatMessageAdapter;
+import com.bil496.studifyapp.adapter.RealmMessagesAdapter;
 import com.bil496.studifyapp.model.ChatMessage;
+import com.bil496.studifyapp.realm.RealmController;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by burak on 3/20/2018.
@@ -27,8 +31,8 @@ public class ChatActivity extends AbstractObservableActivity {
     @BindView(R.id.btn_send) Button mButtonSend;
     @BindView(R.id.et_message) EditText mEditTextMessage;
 
-
-    private ChatMessageAdapter mAdapter;
+    private ChatMessageAdapter adapter;
+    private Realm realm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,10 +40,12 @@ public class ChatActivity extends AbstractObservableActivity {
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        mAdapter = new ChatMessageAdapter(this, new ArrayList<ChatMessage>());
-        mRecyclerView.setAdapter(mAdapter);
+        //get realm instance
+        this.realm = RealmController.with(this).getRealm();
+        setupRecycler();
+        // refresh the realm instance
+        RealmController.with(this).refresh();
+        setRealmAdapter(RealmController.with(this).getMessages());
 
         mButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,9 +60,33 @@ public class ChatActivity extends AbstractObservableActivity {
         });
     }
 
+    public void setRealmAdapter(RealmResults<ChatMessage> messages) {
+        RealmMessagesAdapter realmAdapter = new RealmMessagesAdapter(this.getApplicationContext(), messages, true);
+        // Set the data and tell the RecyclerView to draw
+        adapter.setRealmAdapter(realmAdapter);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setupRecycler() {
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager since the messages are vertically scrollable
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // create an empty adapter and add it to the recycler view
+        adapter = new ChatMessageAdapter(this);
+        mRecyclerView.setAdapter(adapter);
+    }
+
     private void sendMessage(String message) {
-        //ChatMessage chatMessage = new ChatMessage(message, true, false);
-        //mAdapter.add(chatMessage);
+        ChatMessage chatMessage = new ChatMessage(message);
+        chatMessage.setId(RealmController.getInstance().getMessages().size());
+        RealmController.with(this).addMessage(chatMessage);
+        adapter.notifyDataSetChanged();
+        // scroll the recycler view to bottom
+        mRecyclerView.scrollToPosition(chatMessage.getId());
     }
 
     private void recieveMessage(String message) {

@@ -2,13 +2,22 @@ package com.bil496.studifyapp.model;
 
 import java.io.Serializable;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by burak on 3/20/2018.
  */
 
-public class ChatMessage implements Serializable {
+public class ChatMessage extends RealmObject implements Serializable {
+    @PrimaryKey
+    private int id;
+
     private boolean isMine;
     private String content, senderName, senderImage;
+
+    public ChatMessage() {
+    }
 
     public ChatMessage(String content) {
         this.isMine = true;
@@ -20,6 +29,14 @@ public class ChatMessage implements Serializable {
         this.content = content;
         this.senderName = senderName;
         this.senderImage = senderImage;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public boolean isMine() {
