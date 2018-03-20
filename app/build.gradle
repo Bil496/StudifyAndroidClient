@@ -64,6 +64,9 @@ dependencies {
 
     implementation 'com.nex3z:flow-layout:1.2.2'
     implementation 'com.robertlevonyan.view:MaterialChipView:1.2.1'
+
+    implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
+
 }
 
 

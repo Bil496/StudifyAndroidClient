@@ -18,8 +18,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".service.MyFirebaseMessagingService">
+        <service android:name=".service.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -42,23 +41,26 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.Dark"></activity>
+            android:theme="@style/AppTheme.Dark" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".TopicFormActivity"
-            android:label="New Topic"></activity>
+            android:label="New Topic" />
         <activity
             android:name=".TopicActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".ProfileActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.StatusBarTransparent"></activity>
+            android:theme="@style/AppTheme.StatusBarTransparent" />
         <activity
             android:name=".TeamActivity"
-            android:label="Team Name"></activity>
+            android:label="Team Name" />
+        <activity
+            android:name=".ChatActivity"
+            android:label="Team Chat" />
     </application>
 
 </manifest>

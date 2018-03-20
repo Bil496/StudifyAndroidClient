@@ -1,0 +1,108 @@
+package com.bil496.studifyapp.adapter;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bil496.studifyapp.R;
+import com.bil496.studifyapp.model.ChatMessage;
+import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import me.himanshusoni.chatmessageview.ChatMessageView;
+
+/**
+ * Created by burak on 3/20/2018.
+ */
+
+public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.MessageHolder> {
+    private final String TAG = "ChatMessageAdapter";
+    private static final int MY_MESSAGE = 0, OTHER_MESSAGE = 1;
+
+    private List<ChatMessage> mMessages;
+    private Context mContext;
+
+    public ChatMessageAdapter(Context context, List<ChatMessage> data) {
+        mContext = context;
+        mMessages = data;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mMessages == null ? 0 : mMessages.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        ChatMessage item = mMessages.get(position);
+
+        if (item.isMine()) return MY_MESSAGE;
+        else return OTHER_MESSAGE;
+    }
+
+    @Override
+    public MessageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == MY_MESSAGE) {
+            return new MessageHolder(LayoutInflater.from(mContext).inflate(R.layout.item_mine_message, parent, false));
+        } else {
+            return new MessageHolder(LayoutInflater.from(mContext).inflate(R.layout.item_other_message, parent, false));
+        }
+    }
+
+    public void add(ChatMessage message) {
+        mMessages.add(message);
+        notifyItemInserted(mMessages.size() - 1);
+    }
+
+    @Override
+    public void onBindViewHolder(final MessageHolder holder, final int position) {
+        ChatMessage chatMessage = mMessages.get(position);
+        holder.tvMessage.setText(chatMessage.getContent());
+        String date = new SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(new Date());
+        holder.tvTime.setText(date);
+
+        if(chatMessage.isMine() == false){
+            holder.tvSenderName.setText(chatMessage.getSenderName());
+            Picasso.get()
+                    .load(chatMessage.getSenderImage())
+                    .placeholder(R.drawable.user)
+                    .error(R.drawable.user)
+                    .into(holder.ivSenderImage);
+        }
+
+        holder.chatMessageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    class MessageHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.chatMessageView)
+        ChatMessageView chatMessageView;
+        @BindView(R.id.tv_message)
+        TextView tvMessage;
+        @BindView(R.id.tv_time)
+        TextView tvTime;
+        @BindView(R.id.sender_name)
+        TextView tvSenderName;
+        @BindView(R.id.sender_image)
+        ImageView ivSenderImage;
+
+        MessageHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+}
