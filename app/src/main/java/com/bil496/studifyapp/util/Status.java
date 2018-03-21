@@ -17,6 +17,7 @@ public class Status {
         SharedPref.init(context);
         // Set current team null
         SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
+        SharedPref.write(SharedPref.UNREAD_COUNT, 0);
         // Clear chat history
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
@@ -31,6 +32,7 @@ public class Status {
         }else{
             // Set current team id
             SharedPref.write(SharedPref.CURRENT_TEAM_ID, teamId);
+            SharedPref.write(SharedPref.UNREAD_COUNT, 0);
             // Clear chat history
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();

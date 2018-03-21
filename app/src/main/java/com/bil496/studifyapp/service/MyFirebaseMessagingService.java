@@ -86,6 +86,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         ChatMessage chatMessage = new ChatMessage(obj.getString("chatMessage"),
                                 obj.getString("senderName"),
                                 obj.getString("senderImage"));
+                        SharedPref.write(SharedPref.UNREAD_COUNT, SharedPref.read(SharedPref.UNREAD_COUNT, 0) + 1);
                         Realm realm = Realm.getDefaultInstance();
                         chatMessage.setId((int) realm.where(ChatMessage.class).count());
                         realm.beginTransaction();

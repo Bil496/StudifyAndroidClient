@@ -159,6 +159,12 @@ public class ChatActivity extends AbstractObservableActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPref.write(SharedPref.UNREAD_COUNT, 0);
+    }
+
+    @Override
     protected void onNotification(Payload payload) {
         super.onNotification(payload);
         if(payload.getType() == Payload.Type.CHAT_MESSAGE){

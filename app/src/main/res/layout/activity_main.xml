@@ -30,12 +30,26 @@
                     app:iconFont="fonts/material-icon-font.ttf"
                     app:iconSize="24dp"/>
                 <com.app.infideap.stylishwidget.view.ATextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="Hot Topics In Your Location"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textStyle="bold" />
+                <android.support.v4.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+                <com.github.johnkil.print.PrintView
+                    android:id="@+id/action_create_topic_btn"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:gravity="right"
+                    app:iconText="@string/ic_add_box"
+                    app:iconColor="@color/green_btn"
+                    app:iconFont="fonts/material-icon-font.ttf"
+                    app:iconSize="24dp"/>
+
             </LinearLayout>
 
             <android.support.v4.widget.Space

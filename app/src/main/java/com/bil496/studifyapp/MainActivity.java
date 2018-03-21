@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.infideap.stylishwidget.view.Stylish;
@@ -29,14 +30,12 @@ import com.bil496.studifyapp.service.DeleteTokenService;
 import com.bil496.studifyapp.service.UpdateCurrentInfoService;
 import com.bil496.studifyapp.util.SharedPref;
 import com.bil496.studifyapp.util.Status;
+import com.github.johnkil.print.PrintView;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +54,8 @@ public class MainActivity extends AbstractObservableActivity {
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.action_create_topic_btn)
+    PrintView newTopicBtn;
     private Call<Topic[]> call;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +86,37 @@ public class MainActivity extends AbstractObservableActivity {
                 loadData();
             }
         });
-
+        newTopicBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, TopicFormActivity.class);
+                startActivityForResult(intent, 1);
+            }
+        });
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.mipmap.ic_launcher);
         ab.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
 
+    private TextView notificationBadge;
+    private MenuItem teamMenuItem;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+
+        final MenuItem menuItem = menu.findItem(R.id.action_chat);
+        teamMenuItem = menu.findItem(R.id.action_team);
+        notificationBadge = menuItem.getActionView().findViewById(R.id.badge);
+        setupMenuItems();
+        menuItem.getActionView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ChatActivity.class));
+            }
+        });
         return true;
     }
 
@@ -107,8 +128,8 @@ public class MainActivity extends AbstractObservableActivity {
                 Intent intent = new Intent(getBaseContext(), TopicFormActivity.class);
                 startActivityForResult(intent, 1);
                 return true;
-            case R.id.action_refresh:
-                loadData();
+            case R.id.action_team:
+                startActivity(new Intent(this, TeamActivity.class));
                 return true;
             case R.id.action_change_place:
                 SharedPref.write(SharedPref.IS_FIRST, true);
@@ -248,13 +269,46 @@ public class MainActivity extends AbstractObservableActivity {
         }
     }
 
-    @Override
-    protected void onNotification(Payload payload) {
-        super.onNotification(payload);
-        switch (payload.getType()) {
-            case KICKED:
-                // TODO: remove team button view (but there is no team button yet xD)
-                break;
+    private void setupMenuItems(){
+        Integer count = SharedPref.read(SharedPref.UNREAD_COUNT, 0);
+        if(notificationBadge != null){
+            if(count == 0){
+                notificationBadge.setVisibility(View.GONE);
+            }else{
+                notificationBadge.setText(count.toString());
+                notificationBadge.setVisibility(View.VISIBLE);
+            }
         }
+        if(teamMenuItem != null){
+            if(SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1){
+                teamMenuItem.setVisible(true);
+            }else {
+                teamMenuItem.setVisible(false);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupMenuItems();
+
+    }
+
+    @Override
+    protected void onNotification(final Payload payload) {
+        super.onNotification(payload);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (payload.getType()) {
+                    case KICKED:
+                    case CHAT_MESSAGE:
+                    case ACCEPTED:
+                        setupMenuItems();
+                }
+            }
+        });
+
     }
 }
