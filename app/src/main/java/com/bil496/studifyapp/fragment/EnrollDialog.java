@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
+import com.bil496.studifyapp.util.Status;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import java.util.ArrayList;
@@ -102,7 +104,21 @@ public class EnrollDialog extends DialogFragment {
                                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            // TODO: send quit team request
+                                            ApiInterface apiService =
+                                                    ApiClient.getClient().create(ApiInterface.class);
+                                            Call<ResponseBody> quitCall = apiService.kickUser(SharedPref.read(SharedPref.USER_ID, -1), SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1), SharedPref.read(SharedPref.USER_ID, -1));
+                                            try {
+                                                Response<ResponseBody> response = quitCall.execute();
+                                                if(response.isSuccessful()){
+                                                    Status.whenQuitTeam(getActivity());
+                                                }else{
+                                                    APIError error = ErrorUtils.parseError(response);
+                                                    throw new Exception(error.message());
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                                            }
                                         }
                                     })
                                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {

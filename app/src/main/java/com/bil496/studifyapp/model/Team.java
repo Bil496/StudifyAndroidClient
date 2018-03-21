@@ -18,6 +18,8 @@ public class Team implements Serializable {
     private Integer utilityScore;
     @SerializedName("locked")
     private Boolean isLocked;
+    @SerializedName("topic")
+    private Topic topic;
     @SerializedName("members")
     private List<User> users;
     @SerializedName("requests")
@@ -45,6 +47,14 @@ public class Team implements Serializable {
 
     public void setUtilityScore(Integer utilityScore) {
         this.utilityScore = utilityScore;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public void setTopic(Topic topic) {
+        this.topic = topic;
     }
 
     public List<User> getUsers() {

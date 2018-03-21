@@ -24,6 +24,7 @@ import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
+import com.bil496.studifyapp.util.Status;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.unnamed.b.atv.model.TreeNode;
@@ -90,7 +91,8 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
     }
 
     private void updateViews(){
-        SharedPref.write(SharedPref.CURRENT_TEAM_ID, team.getId());
+        Status.whenEnterTopic(getBaseContext(), team.getTopic().getId());
+        Status.whenEnterTeam(TeamActivity.this, team.getId());
         setTitle(team.getName());
         createTreeView(team.getUsers());
         refreshLayout.setRefreshing(false);
@@ -145,8 +147,7 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     if(kickedUserId.equals(SharedPref.read(SharedPref.USER_ID, -1))){
-                        SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
-                        // TODO: clear chat db
+                        Status.whenQuitTeam(getBaseContext());
                         finish();
                     }
                     loadData();

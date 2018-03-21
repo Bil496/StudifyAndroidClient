@@ -8,6 +8,7 @@ import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
+import com.bil496.studifyapp.util.Status;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,14 +37,10 @@ public class UpdateCurrentInfoService extends IntentService {
             public void onResponse(Call<User>call, Response<User> response) {
                 User user = response.body();
                 if(user.getCurrentTopic() != null)
-                    SharedPref.write(SharedPref.CURRENT_TOPIC_ID, user.getCurrentTopic().getId());
-                else
-                    SharedPref.write(SharedPref.CURRENT_TOPIC_ID, -1);
+                    Status.whenEnterTopic(getBaseContext(), user.getCurrentTopic().getId());
 
                 if(user.getCurrentTeam() != null)
-                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, user.getCurrentTeam().getId());
-                else
-                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
+                    Status.whenEnterTeam(UpdateCurrentInfoService.this, user.getCurrentTeam().getId());
             }
 
             @Override

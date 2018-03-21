@@ -28,8 +28,10 @@ import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.service.DeleteTokenService;
 import com.bil496.studifyapp.service.UpdateCurrentInfoService;
 import com.bil496.studifyapp.util.SharedPref;
+import com.bil496.studifyapp.util.Status;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +40,7 @@ import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -148,13 +151,32 @@ public class MainActivity extends AbstractObservableActivity {
                                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                             @Override
                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                // TODO: send quit team request
-                                                FragmentManager fm = getSupportFragmentManager();
-                                                EnrollDialog custom = new EnrollDialog();
-                                                Bundle bundle = new Bundle();
-                                                bundle.putSerializable("topic", topic);
-                                                custom.setArguments(bundle);
-                                                custom.show(fm,"");
+                                                ApiInterface apiService =
+                                                        ApiClient.getClient().create(ApiInterface.class);
+                                                Call<ResponseBody> quitCall = apiService.kickUser(SharedPref.read(SharedPref.USER_ID, -1), SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1), SharedPref.read(SharedPref.USER_ID, -1));
+                                                quitCall.enqueue(new Callback<ResponseBody>() {
+                                                    @Override
+                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                        if(response.isSuccessful()){
+                                                            Status.whenQuitTeam(getBaseContext());
+                                                            FragmentManager fm = getSupportFragmentManager();
+                                                            EnrollDialog custom = new EnrollDialog();
+                                                            Bundle bundle = new Bundle();
+                                                            bundle.putSerializable("topic", topic);
+                                                            custom.setArguments(bundle);
+                                                            custom.show(fm,"");
+                                                        }else{
+                                                            APIError error = ErrorUtils.parseError(response);
+                                                            Toast.makeText(getBaseContext(), error.message(), Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                        Toast.makeText(getBaseContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                                                    }
+                                                });
+                                                sweetAlertDialog.dismissWithAnimation();
                                             }
                                         })
                                         .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -173,8 +195,6 @@ public class MainActivity extends AbstractObservableActivity {
                                 custom.show(fm,"");
                             }
                         }else{
-                            Toast.makeText(getBaseContext(), "You already enrolled", Toast.LENGTH_LONG).show();
-
                             Intent intent = new Intent(getBaseContext(), TopicActivity.class);
                             intent.putExtra("topicId", topic.getId());
                             intent.putExtra("topicName", topic.getTitle());
@@ -233,7 +253,7 @@ public class MainActivity extends AbstractObservableActivity {
         super.onNotification(payload);
         switch (payload.getType()) {
             case KICKED:
-                // TODO: remove team button view
+                // TODO: remove team button view (but there is no team button yet xD)
                 break;
         }
     }

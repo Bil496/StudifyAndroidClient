@@ -15,6 +15,7 @@ import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
+import com.bil496.studifyapp.util.Status;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -105,6 +106,8 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
         SharedPref.write(SharedPref.USER_ID, user.getId());
         SharedPref.write(SharedPref.USERNAME, user.getUsername());
+        Status.whenEnterTopic(getBaseContext(), user.getCurrentTopic().getId());
+        Status.whenEnterTeam(LoginActivity.this, user.getCurrentTeam().getId());
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         startActivity(intent);
         finish();

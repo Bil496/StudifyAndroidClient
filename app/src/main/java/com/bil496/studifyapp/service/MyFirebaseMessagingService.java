@@ -14,6 +14,7 @@ import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.realm.RealmController;
 import com.bil496.studifyapp.util.SharedPref;
+import com.bil496.studifyapp.util.Status;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.sergiocasero.notifikationmanager.NotifikationManager;
@@ -61,7 +62,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 case ACCEPTED:
                     payload.setPayloadData(jsonString, Team.class);
                     activityToStart = TeamActivity.class;
-                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, payload.getPayloadData(Team.class).getId());
+                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, payload.getPayloadData(Team.class).getId()); // TODO check if should call Status.whenEnterTeam
                     break;
                 case DENIED:
                     // Payload comes null
@@ -69,7 +70,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 case KICKED:
                     payload.setPayloadData(jsonString, Team.class);
                     activityToStart = TopicActivity.class;
-                    SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
+                    Status.whenQuitTeam(getBaseContext());
                     bundleOfActivity = new Bundle();
                     bundleOfActivity.putStringArray("dialog", new String[]{
                             remoteMessage.getNotification().getTitle(),

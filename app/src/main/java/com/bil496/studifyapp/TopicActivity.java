@@ -21,6 +21,7 @@ import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
+import com.bil496.studifyapp.util.Status;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
@@ -109,7 +110,7 @@ public class TopicActivity extends AbstractObservableActivity {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         if(response.isSuccessful()){
-                            SharedPref.write(SharedPref.CURRENT_TEAM_ID, response.body());
+                            Status.whenEnterTeam(TopicActivity.this, response.body());
                             loadData();
                             refreshLayout.setRefreshing(false);
                         }else{
