@@ -36,6 +36,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Class<?> activityToStart = null;
         Bundle bundleOfActivity = null;
         Notification notification = null;
+        SharedPref.init(getBaseContext());
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
@@ -74,10 +75,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     activityToStart = TopicActivity.class;
                     Status.whenQuitTeam(getBaseContext());
                     bundleOfActivity = new Bundle();
-                    bundleOfActivity.putStringArray("dialog", new String[]{
-                            remoteMessage.getNotification().getTitle(),
-                            remoteMessage.getNotification().getBody()}
-                    );
+                    bundleOfActivity.putSerializable("dialog", notification);
                     break;
                 case FOLLOWED:
                     // Not supported yet
@@ -88,7 +86,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         ChatMessage chatMessage = new ChatMessage(obj.getString("chatMessage"),
                                 obj.getString("senderName"),
                                 obj.getString("senderImage"));
-                        SharedPref.init(getBaseContext());
                         SharedPref.write(SharedPref.UNREAD_COUNT, SharedPref.read(SharedPref.UNREAD_COUNT, 0) + 1);
                         Realm realm = null;
                         // Clear chat history

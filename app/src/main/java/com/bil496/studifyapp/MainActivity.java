@@ -39,6 +39,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -138,10 +140,30 @@ public class MainActivity extends AbstractObservableActivity {
                 finish();
                 return true;
             case R.id.action_exit:
-                SharedPref.write(SharedPref.USER_ID, -1);
-                Intent intent1 = new Intent(this, LoginActivity.class);
-                startActivity(intent1);
-                finish();
+                ApiInterface apiService =
+                        ApiClient.getClient().create(ApiInterface.class);
+                RequestBody body =
+                        RequestBody.create(MediaType.parse("text/plain"), "null");
+                Call<ResponseBody> call2 = apiService.saveToken(SharedPref.read(SharedPref.USER_ID, -1), body);
+                call2.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if(response.isSuccessful()){
+                            SharedPref.write(SharedPref.USER_ID, -1);
+                            Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent1);
+                            finish();
+                        }else {
+                            APIError error = ErrorUtils.parseError(response);
+                            Toast.makeText(getBaseContext(), error.message(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(getBaseContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
                 return true;
             case R.id.action_reset:
                 SharedPref.clear();
