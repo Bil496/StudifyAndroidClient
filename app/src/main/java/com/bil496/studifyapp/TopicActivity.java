@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bil496.studifyapp.holder.TeamViewHolder;
 import com.bil496.studifyapp.holder.UserViewHolder;
+import com.bil496.studifyapp.model.Notification;
 import com.bil496.studifyapp.model.Payload;
 import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.model.User;
@@ -22,6 +23,7 @@ import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.rest.ErrorUtils;
 import com.bil496.studifyapp.util.SharedPref;
 import com.bil496.studifyapp.util.Status;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
@@ -75,6 +77,14 @@ public class TopicActivity extends AbstractObservableActivity {
         ab.setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         ab.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        if(getIntent().hasExtra("kicked")){
+            Notification notification = (Notification) getIntent().getSerializableExtra("kicked");
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText(notification.getTitle())
+                    .setContentText(notification.getMessage())
+                    .show();
+        }
     }
     private void createTreeView(List<Team> teams){
         TreeNode root = TreeNode.root();

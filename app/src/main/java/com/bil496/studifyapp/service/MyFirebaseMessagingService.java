@@ -60,7 +60,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     activityToStart = TeamActivity.class;
                     bundleOfActivity = new Bundle();
                     bundleOfActivity.putSerializable("requestId", payload.getPayloadData(Integer.class));
-                    bundleOfActivity.putSerializable("notification", payload.getNotification());
+                    bundleOfActivity.putSerializable("request", payload.getNotification());
                     break;
                 case ACCEPTED:
                     payload.setPayloadData(jsonString, Team.class);
@@ -75,7 +75,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     activityToStart = TopicActivity.class;
                     Status.whenQuitTeam(getBaseContext());
                     bundleOfActivity = new Bundle();
-                    bundleOfActivity.putSerializable("dialog", notification);
+                    bundleOfActivity.putSerializable("kicked", notification);
                     break;
                 case FOLLOWED:
                     // Not supported yet
