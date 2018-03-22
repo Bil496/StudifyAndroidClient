@@ -72,7 +72,7 @@ dependencies {
 
     implementation 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
 
-    implementation 'io.realm:realm-android:0.82.1'
+    implementation 'io.realm:realm-android:0.84.1'
 }
 
 

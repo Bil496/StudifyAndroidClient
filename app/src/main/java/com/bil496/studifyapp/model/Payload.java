@@ -46,7 +46,7 @@ public class Payload implements Serializable {
         return notification;
     }
 
-    public void setNotification(RemoteMessage.Notification notification) {
-        this.notification = new Notification(notification.getTitle(), notification.getBody());
+    public void setNotification(Notification notification) {
+        this.notification = notification;
     }
 }

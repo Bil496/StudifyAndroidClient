@@ -54,7 +54,7 @@ public class ChatMessageAdapter extends RealmRecyclerViewAdapter<ChatMessage> {
         ChatMessage item = getItem(position);
         if (item.isMine()) return MY_MESSAGE;
         else{
-            if(position == 0 || !getItem(position - 1).getSenderName().equals(item.getSenderName()))
+            if(position == 0 || getItem(position - 1).isMine() || !getItem(position - 1).getSenderName().equals(item.getSenderName()))
                 return OTHER_MESSAGE;
             else
                 return OTHER_MESSAGE_SEQUENCE;

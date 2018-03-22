@@ -1,5 +1,6 @@
 package com.bil496.studifyapp.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -19,10 +20,19 @@ public class Status {
         SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
         SharedPref.write(SharedPref.UNREAD_COUNT, 0);
         // Clear chat history
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.clear(ChatMessage.class);
-        realm.commitTransaction();
+        Realm realm = null;
+        try {
+            realm = Realm.getDefaultInstance();
+            realm.beginTransaction();
+            realm.clear(ChatMessage.class);
+            realm.commitTransaction();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (realm != null && !realm.isClosed())
+                realm.close();
+        }
+
     }
 
     public static void whenEnterTeam(Context context, Integer teamId){
@@ -34,12 +44,21 @@ public class Status {
             SharedPref.write(SharedPref.CURRENT_TEAM_ID, teamId);
             SharedPref.write(SharedPref.UNREAD_COUNT, 0);
             // Clear chat history
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
-            realm.clear(ChatMessage.class);
-            realm.commitTransaction();
+            Realm realm = null;
+            try {
+                realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                realm.clear(ChatMessage.class);
+                realm.commitTransaction();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (realm != null && !realm.isClosed())
+                    realm.close();
+            }
             // Opens team activity
-            context.startActivity(new Intent(context, TeamActivity.class));
+            if(context instanceof Activity)
+                context.startActivity(new Intent(context, TeamActivity.class));
         }
     }
 

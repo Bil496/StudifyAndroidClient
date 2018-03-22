@@ -1,5 +1,7 @@
 package com.bil496.studifyapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -8,6 +10,7 @@ import java.io.Serializable;
 
 public class Notification implements Serializable {
     private String title;
+    @SerializedName("body")
     private String message;
 
     public Notification(String title, String message) {

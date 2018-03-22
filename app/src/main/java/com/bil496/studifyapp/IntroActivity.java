@@ -102,6 +102,7 @@ public class IntroActivity extends FancyWalkthroughActivity {
 
                         Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                         startActivity(intent);
+                        finish();
                         return true;
                     }
                 })
