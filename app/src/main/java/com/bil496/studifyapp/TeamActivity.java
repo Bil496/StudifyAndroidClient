@@ -13,9 +13,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bil496.studifyapp.holder.TeamViewHolder;
 import com.bil496.studifyapp.holder.UserAtTeamViewHolder;
 import com.bil496.studifyapp.holder.UserViewHolder;
+import com.bil496.studifyapp.model.JoinRequest;
 import com.bil496.studifyapp.model.Notification;
 import com.bil496.studifyapp.model.Payload;
 import com.bil496.studifyapp.model.Team;
@@ -31,6 +33,7 @@ import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -310,6 +313,78 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                         .show();
                 break;
             case R.id.fab_action_show_requests:
+                if(team.getRequests().isEmpty()){
+                    Toast.makeText(TeamActivity.this, "There is no pending request", Toast.LENGTH_SHORT).show();
+                }else{
+                    String names[] = new String[team.getRequests().size()];
+                    for (int i = 0; i < team.getRequests().size(); i++){
+                        names[i] = team.getRequests().get(i).getUser().getName();
+                    }
+                    new MaterialDialog.Builder(this)
+                            .title("Pending requests")
+                            .items(names)
+                            .itemsCallback(new MaterialDialog.ListCallback() {
+                                @Override
+                                public void onSelection(MaterialDialog dialog, View view, final int which, CharSequence text) {
+                                    final ApiInterface apiService =
+                                            ApiClient.getClient().create(ApiInterface.class);
+                                    new SweetAlertDialog(TeamActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                                            .setTitleText(text.toString())
+                                            .setContentText(text.toString() + " wants to join your team")
+                                            .setCancelText("Deny")
+                                            .setConfirmText("Accept")
+                                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                    Call<ResponseBody> call = apiService.postDenyRequest(SharedPref.read(SharedPref.USER_ID, -1), team.getRequests().get(which).getId());
+                                                    call.enqueue(new Callback<ResponseBody>() {
+                                                        @Override
+                                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                            if(response.isSuccessful()){
+                                                                Toast.makeText(TeamActivity.this, "Successfully denied", Toast.LENGTH_SHORT).show();
+                                                            }else{
+                                                                APIError error = ErrorUtils.parseError(response);
+                                                                Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                        }
+                                                    });
+                                                    sweetAlertDialog.dismissWithAnimation();
+                                                }
+                                            })
+                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                                    Call<ResponseBody> call = apiService.postAcceptRequest(SharedPref.read(SharedPref.USER_ID, -1), team.getRequests().get(which).getId());
+                                                    call.enqueue(new Callback<ResponseBody>() {
+                                                        @Override
+                                                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                            if(response.isSuccessful()){
+                                                                Toast.makeText(TeamActivity.this, "Successfully accepted", Toast.LENGTH_SHORT).show();
+                                                                loadData();
+                                                            }else{
+                                                                APIError error = ErrorUtils.parseError(response);
+                                                                Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                                        }
+                                                    });
+                                                    sweetAlertDialog.dismissWithAnimation();
+                                                }
+                                            })
+                                            .show();
+                                }
+                            })
+                            .show();
+                }
                 break;
             case R.id.fab_action_locker:
                 if(team.getLocked()){

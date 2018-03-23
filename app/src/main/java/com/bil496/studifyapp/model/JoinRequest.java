@@ -9,8 +9,18 @@ import java.io.Serializable;
  */
 
 public class JoinRequest implements Serializable {
+    @SerializedName("id")
+    private int id;
     @SerializedName("requester")
     private User user;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public User getUser() {
         return user;
