@@ -74,7 +74,7 @@ public class EnrollDialog extends DialogFragment {
             Talent[] talents = new Talent[topic.getSubtopics().size()];
             Integer userId = SharedPref.read(SharedPref.USER_ID, 0);
             for (int i = 0; i < talents.length; i++){
-                Talent talent = new Talent(topic.getSubtopics().get(i).getId(), userId, Float.floatToIntBits(ratingBars.get(i).getRating()));
+                Talent talent = new Talent(topic.getSubtopics().get(i).getId(), userId, (int)ratingBars.get(i).getRating());
                 talents[i] = talent;
             }
             ApiInterface apiService =
