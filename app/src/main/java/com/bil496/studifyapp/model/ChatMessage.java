@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class ChatMessage extends RealmObject implements Serializable {
     @PrimaryKey
-    private int id;
+    private int Id;
 
     private boolean isMine;
     private String content, senderName, senderImage;
@@ -32,11 +32,11 @@ public class ChatMessage extends RealmObject implements Serializable {
     }
 
     public int getId() {
-        return id;
+        return Id;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int Id) {
+        this.Id = Id;
     }
 
     public boolean isMine() {
