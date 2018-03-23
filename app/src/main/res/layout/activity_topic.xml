@@ -6,9 +6,9 @@
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/container_layout"></RelativeLayout>
+            android:id="@+id/container_layout"></ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.bil496.studifyapp;
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.bil496.studifyapp.holder.TeamViewHolder;
@@ -47,7 +49,7 @@ public class TopicActivity extends AbstractObservableActivity {
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.container_layout)
-    RelativeLayout relativeLayout;
+    ScrollView containerLayout;
     private Call<Team[]> call;
 
     Integer userId;
@@ -97,8 +99,8 @@ public class TopicActivity extends AbstractObservableActivity {
             }
             root.addChild(teamNode);
         }
-        relativeLayout.removeAllViews();
-        relativeLayout.addView(new AndroidTreeView(this, root).getView());
+        containerLayout.removeAllViews();
+        containerLayout.addView(new AndroidTreeView(this, root).getView());
     }
 
     @Override
