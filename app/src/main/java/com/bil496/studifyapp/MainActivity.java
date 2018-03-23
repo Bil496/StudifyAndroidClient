@@ -1,13 +1,16 @@
 package com.bil496.studifyapp;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,6 +62,8 @@ public class MainActivity extends AbstractObservableActivity {
     @BindView(R.id.action_create_topic_btn)
     PrintView newTopicBtn;
     private Call<Topic[]> call;
+    private SearchView searchView;
+    private TopicAdapter topicAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Initial this before setContentView or declare in onCreate() of Custom Application
@@ -108,6 +113,29 @@ public class MainActivity extends AbstractObservableActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                topicAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                topicAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
 
         final MenuItem menuItem = menu.findItem(R.id.action_chat);
         teamMenuItem = menu.findItem(R.id.action_team);
@@ -168,6 +196,8 @@ public class MainActivity extends AbstractObservableActivity {
             case R.id.action_reset:
                 SharedPref.clear();
                 startActivity(new Intent(this, IntroActivity.class));
+                return true;
+            case R.id.action_search:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -308,6 +338,15 @@ public class MainActivity extends AbstractObservableActivity {
                 teamMenuItem.setVisible(false);
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override
