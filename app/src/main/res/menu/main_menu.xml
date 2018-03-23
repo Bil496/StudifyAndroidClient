@@ -10,7 +10,6 @@
         app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/action_chat"
-        android:icon="@drawable/ic_action_cart"
         android:title="Chat"
         app:actionLayout="@layout/item_menu_chat"
         app:showAsAction="always"/>
