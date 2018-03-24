@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -64,6 +66,7 @@ public class MainActivity extends AbstractObservableActivity {
     private Call<Topic[]> call;
     private SearchView searchView;
     private TopicAdapter topicAdapter;
+    private List<Topic> topicList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Initial this before setContentView or declare in onCreate() of Custom Application
@@ -104,6 +107,77 @@ public class MainActivity extends AbstractObservableActivity {
         ab.setHomeAsUpIndicator(R.mipmap.ic_launcher);
         ab.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
+        topicList = new ArrayList<>();
+        topicAdapter = new TopicAdapter(topicList, R.layout.list_item_topic, getApplicationContext(), new CustomItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                final Topic topic = topicAdapter.getFilteredItem(position);
+                if(topic.getId().equals(SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1)) == false){
+                    if (SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1){
+                        new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("You are currently in a team?")
+                                .setContentText("You should quit your team!")
+                                .setCancelText("No, I <3 them")
+                                .setConfirmText("Yes, quit me!")
+                                .showCancelButton(true)
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        ApiInterface apiService =
+                                                ApiClient.getClient().create(ApiInterface.class);
+                                        Call<ResponseBody> quitCall = apiService.kickUser(SharedPref.read(SharedPref.USER_ID, -1), SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1), SharedPref.read(SharedPref.USER_ID, -1));
+                                        quitCall.enqueue(new Callback<ResponseBody>() {
+                                            @Override
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                if(response.isSuccessful()){
+                                                    Status.whenQuitTeam(getBaseContext());
+                                                    FragmentManager fm = getSupportFragmentManager();
+                                                    EnrollDialog custom = new EnrollDialog();
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable("topic", topic);
+                                                    custom.setArguments(bundle);
+                                                    custom.show(fm,"");
+                                                }else{
+                                                    APIError error = ErrorUtils.parseError(response);
+                                                    Toast.makeText(getBaseContext(), error.message(), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                Toast.makeText(getBaseContext(), t.getMessage(), Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }else{
+                        FragmentManager fm = getSupportFragmentManager();
+                        EnrollDialog custom = new EnrollDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("topic", topic);
+                        custom.setArguments(bundle);
+                        custom.show(fm,"");
+                    }
+                }else{
+                    Intent intent = new Intent(getBaseContext(), TopicActivity.class);
+                    intent.putExtra("topicId", topic.getId());
+                    intent.putExtra("topicName", topic.getTitle());
+                    startActivity(intent);
+                }
+            }
+        });
+
+        recyclerView.setAdapter(topicAdapter);
+        topicAdapter.notifyDataSetChanged();
     }
 
     private TextView notificationBadge;
@@ -208,73 +282,9 @@ public class MainActivity extends AbstractObservableActivity {
         call.clone().enqueue(new Callback<Topic[]>() {
             @Override
             public void onResponse(Call<Topic[]>call, Response<Topic[]> response) {
-                final List<Topic> topics = new ArrayList<Topic>(Arrays.asList(response.body()));
-                recyclerView.setAdapter(new TopicAdapter(topics, R.layout.list_item_topic, getApplicationContext(), new CustomItemClickListener() {
-                    @Override
-                    public void onItemClick(View v, int position) {
-                        final Topic topic = topics.get(position);
-                        if(topic.getId().equals(SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1)) == false){
-                            if (SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1){
-                                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
-                                        .setTitleText("You are currently in a team?")
-                                        .setContentText("You should quit your team!")
-                                        .setCancelText("No, I <3 them")
-                                        .setConfirmText("Yes, quit me!")
-                                        .showCancelButton(true)
-                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                ApiInterface apiService =
-                                                        ApiClient.getClient().create(ApiInterface.class);
-                                                Call<ResponseBody> quitCall = apiService.kickUser(SharedPref.read(SharedPref.USER_ID, -1), SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1), SharedPref.read(SharedPref.USER_ID, -1));
-                                                quitCall.enqueue(new Callback<ResponseBody>() {
-                                                    @Override
-                                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                        if(response.isSuccessful()){
-                                                            Status.whenQuitTeam(getBaseContext());
-                                                            FragmentManager fm = getSupportFragmentManager();
-                                                            EnrollDialog custom = new EnrollDialog();
-                                                            Bundle bundle = new Bundle();
-                                                            bundle.putSerializable("topic", topic);
-                                                            custom.setArguments(bundle);
-                                                            custom.show(fm,"");
-                                                        }else{
-                                                            APIError error = ErrorUtils.parseError(response);
-                                                            Toast.makeText(getBaseContext(), error.message(), Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                        Toast.makeText(getBaseContext(), t.getMessage(), Toast.LENGTH_LONG).show();
-                                                    }
-                                                });
-                                                sweetAlertDialog.dismissWithAnimation();
-                                            }
-                                        })
-                                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sDialog) {
-                                                sDialog.dismissWithAnimation();
-                                            }
-                                        })
-                                        .show();
-                            }else{
-                                FragmentManager fm = getSupportFragmentManager();
-                                EnrollDialog custom = new EnrollDialog();
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("topic", topic);
-                                custom.setArguments(bundle);
-                                custom.show(fm,"");
-                            }
-                        }else{
-                            Intent intent = new Intent(getBaseContext(), TopicActivity.class);
-                            intent.putExtra("topicId", topic.getId());
-                            intent.putExtra("topicName", topic.getTitle());
-                            startActivity(intent);
-                        }
-                    }
-                }));
+                topicList.clear();
+                topicList.addAll(Arrays.asList(response.body()));
+                topicAdapter.notifyDataSetChanged();
 
                 refreshLayout.setRefreshing(false);
             }

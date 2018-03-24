@@ -41,7 +41,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
                     filteredTopics = topics;
                 } else {
                     List<Topic> filteredList = new ArrayList<>();
-                    for (Topic row : filteredList) {
+                    for (Topic row : topics) {
 
                         // name match condition. this might differ depending on your requirement
                         // here we are looking for name or phone number match
@@ -101,15 +101,19 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
 
     @Override
     public void onBindViewHolder(TopicViewHolder holder, final int position) {
-        holder.title.setText(topics.get(position).getTitle());
-        holder.size.setText(topics.get(position).getSize().toString());
+        holder.title.setText(filteredTopics.get(position).getTitle());
+        holder.size.setText(filteredTopics.get(position).getSize().toString());
         TextViewUtils utils = TextViewUtils.getInstance();
         //Increment
-        Thread incrementThread = utils.printIncrement(holder.size, "%d active users", topics.get(position).getSize(), 500);
+        Thread incrementThread = utils.printIncrement(holder.size, "%d active users", filteredTopics.get(position).getSize(), 500);
     }
 
     @Override
     public int getItemCount() {
         return filteredTopics.size();
+    }
+
+    public Topic getFilteredItem(int position){
+        return filteredTopics.get(position);
     }
 }
