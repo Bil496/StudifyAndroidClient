@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,10 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.bil496.studifyapp.holder.TeamViewHolder;
 import com.bil496.studifyapp.holder.UserAtTeamViewHolder;
 import com.bil496.studifyapp.holder.UserViewHolder;
-import com.bil496.studifyapp.model.JoinRequest;
 import com.bil496.studifyapp.model.Notification;
 import com.bil496.studifyapp.model.Payload;
 import com.bil496.studifyapp.model.Team;
@@ -33,12 +30,10 @@ import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,7 +43,7 @@ import retrofit2.Response;
  * Created by burak on 3/16/2018.
  */
 
-public class TeamActivity extends AbstractObservableActivity implements View.OnClickListener{
+public class TeamActivity extends AbstractObservableActivity implements View.OnClickListener {
     @BindView(R.id.fab_action_chat)
     FloatingActionButton chatBtn;
     @BindView(R.id.fab_action_notifications)
@@ -92,7 +87,7 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
             }
         });
         final int requestId = getIntent().getIntExtra("requestId", -1);
-        if(requestId != -1){
+        if (requestId != -1) {
             Notification notification = (Notification) getIntent().getSerializableExtra("request");
             final ApiInterface apiService =
                     ApiClient.getClient().create(ApiInterface.class);
@@ -108,9 +103,9 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                             call.enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                    if(response.isSuccessful()){
+                                    if (response.isSuccessful()) {
                                         Toast.makeText(TeamActivity.this, "Successfully denied", Toast.LENGTH_SHORT).show();
-                                    }else{
+                                    } else {
                                         APIError error = ErrorUtils.parseError(response);
                                         Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
                                     }
@@ -131,10 +126,10 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                             call.enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                    if(response.isSuccessful()){
+                                    if (response.isSuccessful()) {
                                         Toast.makeText(TeamActivity.this, "Successfully accepted", Toast.LENGTH_SHORT).show();
                                         loadData();
-                                    }else{
+                                    } else {
                                         APIError error = ErrorUtils.parseError(response);
                                         Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
                                     }
@@ -152,41 +147,41 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
         }
     }
 
-    private void updateViews(){
+    private void updateViews() {
         Status.whenEnterTopic(getBaseContext(), team.getTopic().getId());
         Status.whenEnterTeam(TeamActivity.this, team.getId());
         setTitle(team.getName());
         createTreeView(team.getUsers());
         refreshLayout.setRefreshing(false);
-        if(team.getLocked()){
+        if (team.getLocked()) {
             lockerBtn.setIcon(R.drawable.ic_action_lock_closed);
             lockerBtn.setColorNormalResId(R.color.grayish_btn);
             lockerBtn.setColorPressedResId(R.color.grayish_btn_pressed);
-        }else{
+        } else {
             lockerBtn.setIcon(R.drawable.ic_action_lock_open);
             lockerBtn.setColorNormalResId(R.color.green_btn);
             lockerBtn.setColorPressedResId(R.color.green_btn_pressed);
         }
     }
 
-    private void lockTeam(final boolean lock){
+    private void lockTeam(final boolean lock) {
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
         Call<ResponseBody> call = null;
-        if (lock){
+        if (lock) {
             call = apiService.lockTeam(SharedPref.read(SharedPref.USER_ID, -1),
                     team.getId());
-        }else {
+        } else {
             call = apiService.unlockTeam(SharedPref.read(SharedPref.USER_ID, -1),
                     team.getId());
         }
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Toast.makeText(TeamActivity.this, "Team is successfuly " + (lock ? "locked" : "unlocked"), Toast.LENGTH_LONG).show();
                     loadData();
-                }else{
+                } else {
                     APIError error = ErrorUtils.parseError(response);
                     Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
                 }
@@ -199,7 +194,7 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
         });
     }
 
-    public void removeUserFromTeam(final Integer kickedUserId){
+    public void removeUserFromTeam(final Integer kickedUserId) {
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
         Call<ResponseBody> call = apiService.kickUser(SharedPref.read(SharedPref.USER_ID, -1),
@@ -207,13 +202,13 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
-                    if(kickedUserId.equals(SharedPref.read(SharedPref.USER_ID, -1))){
+                if (response.isSuccessful()) {
+                    if (kickedUserId.equals(SharedPref.read(SharedPref.USER_ID, -1))) {
                         Status.whenQuitTeam(getBaseContext());
                         finish();
                     }
                     loadData();
-                }else{
+                } else {
                     APIError error = ErrorUtils.parseError(response);
                     Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
                 }
@@ -226,17 +221,17 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
         });
     }
 
-    protected void loadData(){
+    protected void loadData() {
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
         Call<Team> call = apiService.getTeam(SharedPref.read(SharedPref.USER_ID, -1));
         call.enqueue(new Callback<Team>() {
             @Override
             public void onResponse(Call<Team> call, Response<Team> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     team = response.body();
                     updateViews();
-                }else {
+                } else {
                     finish();
                 }
             }
@@ -249,10 +244,10 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
         });
     }
 
-    private void createTreeView(List<User> users){
+    private void createTreeView(List<User> users) {
         TreeNode root = TreeNode.root();
 
-        for (User user : users){
+        for (User user : users) {
             TreeNode userNode = new TreeNode(new UserViewHolder.UserItem(user)).setViewHolder(new UserAtTeamViewHolder(this));
             root.addChild(userNode);
         }
@@ -282,17 +277,17 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.fab_action_chat:
                 startActivity(new Intent(this, ChatActivity.class));
                 break;
             case R.id.fab_action_notifications:
                 isNotificationOn = !isNotificationOn;
-                if(isNotificationOn){
+                if (isNotificationOn) {
                     notificationsBtn.setIcon(R.drawable.ic_action_volume_up);
                     notificationsBtn.setColorNormalResId(R.color.blue_btn);
                     notificationsBtn.setColorPressedResId(R.color.blue_btn_pressed);
-                }else{
+                } else {
                     notificationsBtn.setIcon(R.drawable.ic_action_volume_mute);
                     notificationsBtn.setColorNormalResId(R.color.grayish_btn);
                     notificationsBtn.setColorPressedResId(R.color.grayish_btn_pressed);
@@ -313,11 +308,11 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                         .show();
                 break;
             case R.id.fab_action_show_requests:
-                if(team.getRequests().isEmpty()){
+                if (team.getRequests().isEmpty()) {
                     Toast.makeText(TeamActivity.this, "There is no pending request", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     String names[] = new String[team.getRequests().size()];
-                    for (int i = 0; i < team.getRequests().size(); i++){
+                    for (int i = 0; i < team.getRequests().size(); i++) {
                         names[i] = team.getRequests().get(i).getUser().getName();
                     }
                     new MaterialDialog.Builder(this)
@@ -340,9 +335,9 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                                                     call.enqueue(new Callback<ResponseBody>() {
                                                         @Override
                                                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                            if(response.isSuccessful()){
+                                                            if (response.isSuccessful()) {
                                                                 Toast.makeText(TeamActivity.this, "Successfully denied", Toast.LENGTH_SHORT).show();
-                                                            }else{
+                                                            } else {
                                                                 APIError error = ErrorUtils.parseError(response);
                                                                 Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
                                                             }
@@ -363,10 +358,10 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                                                     call.enqueue(new Callback<ResponseBody>() {
                                                         @Override
                                                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                            if(response.isSuccessful()){
+                                                            if (response.isSuccessful()) {
                                                                 Toast.makeText(TeamActivity.this, "Successfully accepted", Toast.LENGTH_SHORT).show();
                                                                 loadData();
-                                                            }else{
+                                                            } else {
                                                                 APIError error = ErrorUtils.parseError(response);
                                                                 Toast.makeText(TeamActivity.this, error.message(), Toast.LENGTH_LONG).show();
                                                             }
@@ -387,7 +382,7 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                 }
                 break;
             case R.id.fab_action_locker:
-                if(team.getLocked()){
+                if (team.getLocked()) {
                     new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Are you sure?")
                             .setContentText("Anyone be able to send join request!")
@@ -400,7 +395,7 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                                 }
                             })
                             .show();
-                }else{
+                } else {
                     new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("Are you sure?")
                             .setContentText("Won't be able to get requests from others!")
@@ -419,12 +414,13 @@ public class TeamActivity extends AbstractObservableActivity implements View.OnC
                 break;
         }
     }
+
     @Override
     protected void onNotification(Payload payload) {
         super.onNotification(payload);
         switch (payload.getType()) {
             case KICKED:
-                if(payload.getPayloadData(Team.class).getId().equals(team.getId()))
+                if (payload.getPayloadData(Team.class).getId().equals(team.getId()))
                     finish();
                 break;
         }

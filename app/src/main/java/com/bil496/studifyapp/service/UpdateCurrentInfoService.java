@@ -21,30 +21,28 @@ import retrofit2.Response;
 public class UpdateCurrentInfoService extends IntentService {
     public static final String TAG = DeleteTokenService.class.getSimpleName();
 
-    public UpdateCurrentInfoService()
-    {
+    public UpdateCurrentInfoService() {
         super(TAG);
     }
 
     @Override
-    protected void onHandleIntent(Intent intent)
-    {
+    protected void onHandleIntent(Intent intent) {
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
         Call<User> call = apiService.getUser(SharedPref.read(SharedPref.USERNAME, ""));
         call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User>call, Response<User> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
-                if(user.getCurrentTopic() != null)
+                if (user.getCurrentTopic() != null)
                     Status.whenEnterTopic(getBaseContext(), user.getCurrentTopic().getId());
 
-                if(user.getCurrentTeam() != null)
+                if (user.getCurrentTeam() != null)
                     Status.whenEnterTeam(UpdateCurrentInfoService.this, user.getCurrentTeam().getId());
             }
 
             @Override
-            public void onFailure(Call<User>call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
             }

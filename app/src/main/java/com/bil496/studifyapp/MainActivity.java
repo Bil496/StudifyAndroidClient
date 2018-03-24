@@ -2,14 +2,12 @@ package com.bil496.studifyapp;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -60,13 +58,17 @@ public class MainActivity extends AbstractObservableActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
     @BindView(R.id.action_create_topic_btn)
     PrintView newTopicBtn;
     private Call<Topic[]> call;
     private SearchView searchView;
     private TopicAdapter topicAdapter;
     private List<Topic> topicList;
+    private TextView notificationBadge;
+    private MenuItem teamMenuItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Initial this before setContentView or declare in onCreate() of Custom Application
@@ -113,8 +115,8 @@ public class MainActivity extends AbstractObservableActivity {
             @Override
             public void onItemClick(View v, int position) {
                 final Topic topic = topicAdapter.getFilteredItem(position);
-                if(topic.getId().equals(SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1)) == false){
-                    if (SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1){
+                if (topic.getId().equals(SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1)) == false) {
+                    if (SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1) {
                         new SweetAlertDialog(MainActivity.this, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("You are currently in a team?")
                                 .setContentText("You should quit your team!")
@@ -130,15 +132,15 @@ public class MainActivity extends AbstractObservableActivity {
                                         quitCall.enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if(response.isSuccessful()){
+                                                if (response.isSuccessful()) {
                                                     Status.whenQuitTeam(getBaseContext());
                                                     FragmentManager fm = getSupportFragmentManager();
                                                     EnrollDialog custom = new EnrollDialog();
                                                     Bundle bundle = new Bundle();
                                                     bundle.putSerializable("topic", topic);
                                                     custom.setArguments(bundle);
-                                                    custom.show(fm,"");
-                                                }else{
+                                                    custom.show(fm, "");
+                                                } else {
                                                     APIError error = ErrorUtils.parseError(response);
                                                     Toast.makeText(getBaseContext(), error.message(), Toast.LENGTH_LONG).show();
                                                 }
@@ -159,15 +161,15 @@ public class MainActivity extends AbstractObservableActivity {
                                     }
                                 })
                                 .show();
-                    }else{
+                    } else {
                         FragmentManager fm = getSupportFragmentManager();
                         EnrollDialog custom = new EnrollDialog();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("topic", topic);
                         custom.setArguments(bundle);
-                        custom.show(fm,"");
+                        custom.show(fm, "");
                     }
-                }else{
+                } else {
                     Intent intent = new Intent(getBaseContext(), TopicActivity.class);
                     intent.putExtra("topicId", topic.getId());
                     intent.putExtra("topicName", topic.getTitle());
@@ -179,9 +181,6 @@ public class MainActivity extends AbstractObservableActivity {
         recyclerView.setAdapter(topicAdapter);
         topicAdapter.notifyDataSetChanged();
     }
-
-    private TextView notificationBadge;
-    private MenuItem teamMenuItem;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -250,12 +249,12 @@ public class MainActivity extends AbstractObservableActivity {
                 call2.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if(response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             SharedPref.write(SharedPref.USER_ID, -1);
                             Intent intent1 = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(intent1);
                             finish();
-                        }else {
+                        } else {
                             APIError error = ErrorUtils.parseError(response);
                             Toast.makeText(getBaseContext(), error.message(), Toast.LENGTH_LONG).show();
                         }
@@ -278,10 +277,10 @@ public class MainActivity extends AbstractObservableActivity {
         }
     }
 
-    private void loadData(){
+    private void loadData() {
         call.clone().enqueue(new Callback<Topic[]>() {
             @Override
-            public void onResponse(Call<Topic[]>call, Response<Topic[]> response) {
+            public void onResponse(Call<Topic[]> call, Response<Topic[]> response) {
                 topicList.clear();
                 topicList.addAll(Arrays.asList(response.body()));
                 topicAdapter.notifyDataSetChanged();
@@ -290,7 +289,7 @@ public class MainActivity extends AbstractObservableActivity {
             }
 
             @Override
-            public void onFailure(Call<Topic[]>call, Throwable t) {
+            public void onFailure(Call<Topic[]> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 refreshLayout.setRefreshing(false);
@@ -300,19 +299,19 @@ public class MainActivity extends AbstractObservableActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 1){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
                 final Topic topic = (Topic) data.getSerializableExtra("topic");
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
                 Call<Integer> call2 = apiService.postTopic(SharedPref.read(SharedPref.LOCATION_ID, 0), topic);
                 call2.enqueue(new Callback<Integer>() {
                     @Override
-                    public void onResponse(Call<Integer>call, Response<Integer> response) {
-                        if(response.isSuccessful()) {
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        if (response.isSuccessful()) {
                             Toast.makeText(getBaseContext(), "Topic " + topic.getTitle() + " created!", Toast.LENGTH_LONG).show();
                             loadData();
-                        }else{
+                        } else {
                             APIError error = ErrorUtils.parseError(response);
                             // … and use it to show error information
                             Toast.makeText(getApplicationContext(), error.message(), Toast.LENGTH_LONG).show();
@@ -322,7 +321,7 @@ public class MainActivity extends AbstractObservableActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Integer>call, Throwable t) {
+                    public void onFailure(Call<Integer> call, Throwable t) {
                         // Log error here since request failed
                         Log.e(TAG, t.toString());
                     }
@@ -331,20 +330,20 @@ public class MainActivity extends AbstractObservableActivity {
         }
     }
 
-    private void setupMenuItems(){
+    private void setupMenuItems() {
         Integer count = SharedPref.read(SharedPref.UNREAD_COUNT, 0);
-        if(notificationBadge != null){
-            if(count == 0){
+        if (notificationBadge != null) {
+            if (count == 0) {
                 notificationBadge.setVisibility(View.GONE);
-            }else{
+            } else {
                 notificationBadge.setText(count.toString());
                 notificationBadge.setVisibility(View.VISIBLE);
             }
         }
-        if(teamMenuItem != null){
-            if(SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1){
+        if (teamMenuItem != null) {
+            if (SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1) != -1) {
                 teamMenuItem.setVisible(true);
-            }else {
+            } else {
                 teamMenuItem.setVisible(false);
             }
         }

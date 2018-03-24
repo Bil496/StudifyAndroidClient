@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by burak on 3/11/2018.
  */
 
-public class User implements Serializable{
+public class User implements Serializable {
     @SerializedName("id")
     private Integer id;
     @SerializedName("name")

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.infideap.stylishwidget.util.TextViewUtils;
@@ -24,12 +23,20 @@ import butterknife.ButterKnife;
  * Created by burak on 3/11/2018.
  */
 
-public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHolder> implements Filterable{
+public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHolder> implements Filterable {
+    CustomItemClickListener listener;
     private List<Topic> topics;
     private List<Topic> filteredTopics;
     private int rowLayout;
     private Context context;
-    CustomItemClickListener listener;
+
+    public TopicAdapter(List<Topic> topics, int rowLayout, Context context, CustomItemClickListener listener) {
+        this.topics = topics;
+        this.rowLayout = rowLayout;
+        this.context = context;
+        this.listener = listener;
+        this.filteredTopics = topics;
+    }
 
     @Override
     public Filter getFilter() {
@@ -66,30 +73,12 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
         };
     }
 
-    public static class TopicViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.title) TextView title;
-        @BindView(R.id.size) TextView size;
-
-
-        public TopicViewHolder(View v) {
-            super(v);
-            ButterKnife.bind(this, v);
-        }
-    }
-    public TopicAdapter(List<Topic> topics, int rowLayout, Context context, CustomItemClickListener listener) {
-        this.topics = topics;
-        this.rowLayout = rowLayout;
-        this.context = context;
-        this.listener = listener;
-        this.filteredTopics = topics;
-    }
-
     @Override
     public TopicAdapter.TopicViewHolder onCreateViewHolder(ViewGroup parent,
-                                                            int viewType) {
+                                                           int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
         final TopicViewHolder viewHolder = new TopicViewHolder(view);
-        view.setOnClickListener(new View.OnClickListener(){
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(v, viewHolder.getPosition());
@@ -97,7 +86,6 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
         });
         return viewHolder;
     }
-
 
     @Override
     public void onBindViewHolder(TopicViewHolder holder, final int position) {
@@ -113,7 +101,20 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
         return filteredTopics.size();
     }
 
-    public Topic getFilteredItem(int position){
+    public Topic getFilteredItem(int position) {
         return filteredTopics.get(position);
+    }
+
+    public static class TopicViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.size)
+        TextView size;
+
+
+        public TopicViewHolder(View v) {
+            super(v);
+            ButterKnife.bind(this, v);
+        }
     }
 }

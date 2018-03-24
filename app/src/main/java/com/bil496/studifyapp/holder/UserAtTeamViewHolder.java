@@ -1,20 +1,13 @@
 package com.bil496.studifyapp.holder;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bil496.studifyapp.ProfileActivity;
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.TeamActivity;
-import com.bil496.studifyapp.model.Team;
 import com.bil496.studifyapp.util.SharedPref;
 import com.github.johnkil.print.PrintView;
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
@@ -24,20 +17,20 @@ import com.unnamed.b.atv.model.TreeNode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.content.ContentValues.TAG;
-
 /**
  * Created by burak on 3/17/2018.
  */
 
-public class UserAtTeamViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHolder.UserItem>{
+public class UserAtTeamViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHolder.UserItem> {
     @BindView(R.id.arrow_icon)
     PrintView arrowView;
     @BindView(R.id.profile_pic)
     ImageView profileImage;
     @BindView(R.id.name_of_user)
     TextView userNameLabel;
-    @BindView(R.id.btn_kickUser) PrintView kickUserView;
+    @BindView(R.id.btn_kickUser)
+    PrintView kickUserView;
+
     public UserAtTeamViewHolder(Context context) {
         super(context);
     }
@@ -53,10 +46,10 @@ public class UserAtTeamViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHo
                 .error(R.drawable.user)
                 .into(profileImage);
         userNameLabel.setText(value.user.getName());
-        if(SharedPref.read(SharedPref.USER_ID, -1).equals(value.user.getId())){
+        if (SharedPref.read(SharedPref.USER_ID, -1).equals(value.user.getId())) {
             kickUserView.setIconText(context.getResources().getString(R.string.ic_account_circle));
             kickUserView.setIconColor(R.color.green_btn_pressed);
-        }else{
+        } else {
             kickUserView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -74,7 +67,7 @@ public class UserAtTeamViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHo
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    TeamActivity activity = (TeamActivity)context;
+                                    TeamActivity activity = (TeamActivity) context;
                                     activity.removeUserFromTeam(value.user.getId());
                                     sweetAlertDialog.dismissWithAnimation();
                                 }

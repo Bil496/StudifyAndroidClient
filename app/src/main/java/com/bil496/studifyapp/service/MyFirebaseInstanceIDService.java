@@ -2,15 +2,11 @@ package com.bil496.studifyapp.service;
 
 import android.util.Log;
 
-import com.bil496.studifyapp.model.Place;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -38,17 +34,17 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         saveTokenToSharedPref(refreshedToken);
     }
 
-    private void saveTokenToSharedPref(String refreshedToken){
+    private void saveTokenToSharedPref(String refreshedToken) {
         SharedPref.init(getApplicationContext());
         SharedPref.write(SharedPref.FIREBASE_TOKEN, refreshedToken);
-        if (SharedPref.read(SharedPref.USER_ID, -1) != -1){
+        if (SharedPref.read(SharedPref.USER_ID, -1) != -1) {
             sendRegistrationToServer(SharedPref.read(SharedPref.USER_ID, -1), refreshedToken);
-        }else{
+        } else {
             Log.w(TAG, "Token is not saved to the server because userId is not set yet.");
         }
     }
 
-    private void sendRegistrationToServer(Integer userId, String refreshedToken){
+    private void sendRegistrationToServer(Integer userId, String refreshedToken) {
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
         RequestBody body =

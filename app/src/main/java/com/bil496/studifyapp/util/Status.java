@@ -14,7 +14,7 @@ import io.realm.Realm;
  */
 
 public class Status {
-    public static void whenQuitTeam(Context context){
+    public static void whenQuitTeam(Context context) {
         SharedPref.init(context);
         // Set current team null
         SharedPref.write(SharedPref.CURRENT_TEAM_ID, -1);
@@ -35,11 +35,11 @@ public class Status {
 
     }
 
-    public static void whenEnterTeam(Context context, Integer teamId){
+    public static void whenEnterTeam(Context context, Integer teamId) {
         SharedPref.init(context);
-        if(SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1).equals(teamId)){
+        if (SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1).equals(teamId)) {
             // Ignore
-        }else{
+        } else {
             // Set current team id
             SharedPref.write(SharedPref.CURRENT_TEAM_ID, teamId);
             SharedPref.write(SharedPref.UNREAD_COUNT, 0);
@@ -57,22 +57,22 @@ public class Status {
                     realm.close();
             }
             // Opens team activity
-            if(context instanceof Activity)
+            if (context instanceof Activity)
                 context.startActivity(new Intent(context, TeamActivity.class));
         }
     }
 
-    public static void whenQuitTopic(Context context){
+    public static void whenQuitTopic(Context context) {
         whenQuitTeam(context);
         // Set current topic null
         SharedPref.write(SharedPref.CURRENT_TOPIC_ID, -1);
     }
 
-    public static void whenEnterTopic(Context context, Integer topicId){
+    public static void whenEnterTopic(Context context, Integer topicId) {
         SharedPref.init(context);
-        if(SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1).equals(topicId)){
+        if (SharedPref.read(SharedPref.CURRENT_TOPIC_ID, -1).equals(topicId)) {
             // Ignore
-        }else{
+        } else {
             whenQuitTeam(context);
             // Set current topic id
             SharedPref.write(SharedPref.CURRENT_TOPIC_ID, topicId);

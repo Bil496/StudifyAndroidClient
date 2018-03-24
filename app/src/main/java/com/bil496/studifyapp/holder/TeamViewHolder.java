@@ -6,7 +6,6 @@ package com.bil496.studifyapp.holder;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,16 +26,20 @@ import com.unnamed.b.atv.model.TreeNode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.TeamItem> {
-    @BindView(R.id.arrow_icon) PrintView arrowView;
-    @BindView(R.id.icon) PrintView iconView;
-    @BindView(R.id.node_value) TextView teamNameLabel;
-    @BindView(R.id.size) TextView sizeLabel;
+    @BindView(R.id.arrow_icon)
+    PrintView arrowView;
+    @BindView(R.id.icon)
+    PrintView iconView;
+    @BindView(R.id.node_value)
+    TextView teamNameLabel;
+    @BindView(R.id.size)
+    TextView sizeLabel;
+
     public TeamViewHolder(Context context) {
         super(context);
     }
@@ -47,30 +50,28 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
         final View view = inflater.inflate(R.layout.node_team, null, false);
         ButterKnife.bind(this, view);
         iconView.setIconText(context.getResources().getString(R.string.ic_people));
-        teamNameLabel.setText(value.team.getName() + " ("+value.team.getUtilityScore()+")");
+        teamNameLabel.setText(value.team.getName() + " (" + value.team.getUtilityScore() + ")");
         sizeLabel.setText(value.team.getUsers().size() + (value.team.getUsers().size() == 1 ? " person" : " people "));
         final PrintView sendRequestView = view.findViewById(R.id.btn_sendRequest);
         boolean waitingRequest = false;
-        if(value.team.getRequests() != null){
-            for (JoinRequest request : value.team.getRequests()){
-                if (request.getUser().getId().equals(SharedPref.read(SharedPref.USER_ID, -1))){
+        if (value.team.getRequests() != null) {
+            for (JoinRequest request : value.team.getRequests()) {
+                if (request.getUser().getId().equals(SharedPref.read(SharedPref.USER_ID, -1))) {
                     waitingRequest = true;
                     break;
                 }
             }
         }
 
-        if (waitingRequest){
+        if (waitingRequest) {
             sendRequestView.setIconText(R.string.ic_done_all);
             sendRequestView.setClickable(false);
-        }
-        else if(value.team.getId() == SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1)){
+        } else if (value.team.getId() == SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1)) {
             sendRequestView.setIconText(R.string.ic_verified_user);
-        }
-        else if(value.team.getLocked()){
+        } else if (value.team.getLocked()) {
             sendRequestView.setIconText(R.string.ic_lock);
             sendRequestView.setIconColor(R.color.red);
-        }else{
+        } else {
             sendRequestView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -82,7 +83,7 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
                     call.enqueue(new Callback<Integer>() {
                         @Override
                         public void onResponse(Call<Integer> call, Response<Integer> response) {
-                            if(response.isSuccessful()){
+                            if (response.isSuccessful()) {
                                 sendRequestView.setIconText(R.string.ic_done);
                                 Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
@@ -90,7 +91,7 @@ public class TeamViewHolder extends TreeNode.BaseNodeViewHolder<TeamViewHolder.T
                                         sendRequestView.setIconText(R.string.ic_done_all);
                                     }
                                 }, 2000);
-                            }else{
+                            } else {
                                 APIError error = ErrorUtils.parseError(response);
                                 Toast.makeText(context, error.message(), Toast.LENGTH_LONG).show();
                                 sendRequestView.setClickable(true);

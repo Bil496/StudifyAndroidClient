@@ -2,9 +2,7 @@ package com.bil496.studifyapp;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,11 +25,13 @@ import retrofit2.Response;
  * Created by burak on 3/16/2018.
  */
 
-public class ProfileActivity extends AbstractObservableActivity{
+public class ProfileActivity extends AbstractObservableActivity {
     @BindView(R.id.profile_pp)
     ImageView profielPicView;
-    @BindView(R.id.profile_current_team) TextView currentTeamView;
-    @BindView(R.id.profile_current_topic) TextView currentTopicView;
+    @BindView(R.id.profile_current_team)
+    TextView currentTeamView;
+    @BindView(R.id.profile_current_topic)
+    TextView currentTopicView;
     @BindView(R.id.profile_current_topic_layout)
     LinearLayout currentTopicLayout;
     @BindView(R.id.profile_current_team_layout)
@@ -66,13 +66,13 @@ public class ProfileActivity extends AbstractObservableActivity{
         Call<User> call = apiService.getUser(user.getUsername());
         call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User>call, Response<User> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 User user = response.body();
-                if(user.getCurrentTeam() != null){
+                if (user.getCurrentTeam() != null) {
                     currentTeamView.setText(user.getCurrentTeam().getName());
                     currentTeamLayout.setVisibility(View.VISIBLE);
                 }
-                if(user.getCurrentTopic() != null){
+                if (user.getCurrentTopic() != null) {
                     currentTopicView.setText(user.getCurrentTopic().getTitle());
                     currentTopicLayout.setVisibility(View.VISIBLE);
                 }

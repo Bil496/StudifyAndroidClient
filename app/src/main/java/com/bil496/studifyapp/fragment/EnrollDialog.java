@@ -5,13 +5,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RatingBar;
@@ -49,32 +47,20 @@ import retrofit2.Response;
 
 public class EnrollDialog extends DialogFragment {
     private static final String TAG = DialogFragment.class.getSimpleName();
-    @BindView(R.id.root_layout) LinearLayout rootLayout;
+    @BindView(R.id.root_layout)
+    LinearLayout rootLayout;
     @BindView(R.id.enroll_button)
     AButton doneBtn;
     List<RatingBar> ratingBars;
     private Topic topic;
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_enroll_dialog,container,false);
-        ButterKnife.bind(this, view);
-        topic = (Topic) getArguments().getSerializable("topic");
-        getDialog().setTitle("Sample");
-        doneBtn.setText("Enroll");
-        doneBtn.setOnClickListener(doneAction);
-        createSubtopic(topic.getSubtopics());
-        return view;
-    }
-
     View.OnClickListener doneAction = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             doneBtn.setClickable(false);
             Talent[] talents = new Talent[topic.getSubtopics().size()];
             Integer userId = SharedPref.read(SharedPref.USER_ID, 0);
-            for (int i = 0; i < talents.length; i++){
-                Talent talent = new Talent(topic.getSubtopics().get(i).getId(), userId, (int)ratingBars.get(i).getRating());
+            for (int i = 0; i < talents.length; i++) {
+                Talent talent = new Talent(topic.getSubtopics().get(i).getId(), userId, (int) ratingBars.get(i).getRating());
                 talents[i] = talent;
             }
             ApiInterface apiService =
@@ -83,8 +69,8 @@ public class EnrollDialog extends DialogFragment {
             Log.e(TAG, call.toString());
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody>call, Response<ResponseBody> response) {
-                    if(response.isSuccessful()) {
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
                         Log.d(TAG, response.toString());
                         SharedPref.write(SharedPref.CURRENT_TOPIC_ID, topic.getId());
                         Intent intent = new Intent(getActivity(), TopicActivity.class);
@@ -92,9 +78,9 @@ public class EnrollDialog extends DialogFragment {
                         intent.putExtra("topicName", topic.getTitle());
                         dismiss();
                         startActivity(intent);
-                    }else{
+                    } else {
                         APIError error = ErrorUtils.parseError(response);
-                        if (error.status() == APIError.QUIT_TEAM_BEFORE_ENROLLING_TOPIC){
+                        if (error.status() == APIError.QUIT_TEAM_BEFORE_ENROLLING_TOPIC) {
                             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText("You are currently in a team?")
                                     .setContentText("You should quit your team!")
@@ -109,9 +95,9 @@ public class EnrollDialog extends DialogFragment {
                                             Call<ResponseBody> quitCall = apiService.kickUser(SharedPref.read(SharedPref.USER_ID, -1), SharedPref.read(SharedPref.CURRENT_TEAM_ID, -1), SharedPref.read(SharedPref.USER_ID, -1));
                                             try {
                                                 Response<ResponseBody> response = quitCall.execute();
-                                                if(response.isSuccessful()){
+                                                if (response.isSuccessful()) {
                                                     Status.whenQuitTeam(getActivity());
-                                                }else{
+                                                } else {
                                                     APIError error = ErrorUtils.parseError(response);
                                                     throw new Exception(error.message());
                                                 }
@@ -128,7 +114,7 @@ public class EnrollDialog extends DialogFragment {
                                         }
                                     })
                                     .show();
-                        }else{
+                        } else {
                             // … and use it to show error information
                             Toast.makeText(getActivity(), error.message(), Toast.LENGTH_LONG).show();
                         }
@@ -138,7 +124,7 @@ public class EnrollDialog extends DialogFragment {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody>call, Throwable t) {
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
                     // Log error here since request failed
                     Log.e(TAG, t.toString());
                     doneBtn.setClickable(true);
@@ -147,9 +133,22 @@ public class EnrollDialog extends DialogFragment {
         }
     };
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_enroll_dialog, container, false);
+        ButterKnife.bind(this, view);
+        topic = (Topic) getArguments().getSerializable("topic");
+        getDialog().setTitle("Sample");
+        doneBtn.setText("Enroll");
+        doneBtn.setOnClickListener(doneAction);
+        createSubtopic(topic.getSubtopics());
+        return view;
+    }
+
     private void createSubtopic(List<Subtopic> subtopics) {
         ratingBars = new ArrayList<>();
-        for (Subtopic subtopic : subtopics){
+        for (Subtopic subtopic : subtopics) {
             LinearLayout parent = new LinearLayout(getActivity());
             parent.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             parent.setPadding(16, 16, 16, 16);

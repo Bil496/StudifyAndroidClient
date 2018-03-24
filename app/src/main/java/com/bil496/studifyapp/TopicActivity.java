@@ -1,15 +1,12 @@
 package com.bil496.studifyapp;
 
 import android.os.Bundle;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -35,7 +32,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,10 +46,10 @@ public class TopicActivity extends AbstractObservableActivity {
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.container_layout)
     ScrollView containerLayout;
-    private Call<Team[]> call;
-
     Integer userId;
     Integer topicId;
+    private Call<Team[]> call;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +76,7 @@ public class TopicActivity extends AbstractObservableActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        if(getIntent().hasExtra("kicked")){
+        if (getIntent().hasExtra("kicked")) {
             Notification notification = (Notification) getIntent().getSerializableExtra("kicked");
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText(notification.getTitle())
@@ -88,12 +84,13 @@ public class TopicActivity extends AbstractObservableActivity {
                     .show();
         }
     }
-    private void createTreeView(List<Team> teams){
+
+    private void createTreeView(List<Team> teams) {
         TreeNode root = TreeNode.root();
 
-        for (Team team : teams){
+        for (Team team : teams) {
             TreeNode teamNode = new TreeNode(new TeamViewHolder.TeamItem(team)).setViewHolder(new TeamViewHolder(this)).setExpanded(true);
-            for (User user : team.getUsers()){
+            for (User user : team.getUsers()) {
                 TreeNode userNode = new TreeNode(new UserViewHolder.UserItem(user)).setViewHolder(new UserViewHolder(this));
                 teamNode.addChild(userNode);
             }
@@ -121,11 +118,11 @@ public class TopicActivity extends AbstractObservableActivity {
                 call2.enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
-                        if(response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             Status.whenEnterTeam(TopicActivity.this, response.body());
                             loadData();
                             refreshLayout.setRefreshing(false);
-                        }else{
+                        } else {
                             APIError error = ErrorUtils.parseError(response);
                             // … and use it to show error information
                             Toast.makeText(getApplicationContext(), error.message(), Toast.LENGTH_LONG).show();
@@ -150,14 +147,14 @@ public class TopicActivity extends AbstractObservableActivity {
         }
     }
 
-    private void loadData(){
+    private void loadData() {
         call.clone().enqueue(new Callback<Team[]>() {
             @Override
-            public void onResponse(Call<Team[]>call, Response<Team[]> response) {
-                if(response.isSuccessful()){
+            public void onResponse(Call<Team[]> call, Response<Team[]> response) {
+                if (response.isSuccessful()) {
                     final List<Team> teams = new ArrayList<Team>(Arrays.asList(response.body()));
                     createTreeView(teams);
-                }else{
+                } else {
                     APIError error = ErrorUtils.parseError(response);
                     Toast.makeText(TopicActivity.this, error.message(), Toast.LENGTH_LONG).show();
                 }
@@ -166,7 +163,7 @@ public class TopicActivity extends AbstractObservableActivity {
             }
 
             @Override
-            public void onFailure(Call<Team[]>call, Throwable t) {
+            public void onFailure(Call<Team[]> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 refreshLayout.setRefreshing(false);

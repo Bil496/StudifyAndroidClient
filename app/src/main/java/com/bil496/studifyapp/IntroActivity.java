@@ -3,7 +3,6 @@ package com.bil496.studifyapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bil496.studifyapp.model.Place;
@@ -27,11 +26,12 @@ import retrofit2.Response;
 
 public class IntroActivity extends FancyWalkthroughActivity {
     private List<Place> placeList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPref.init(getApplicationContext());
-        if (!SharedPref.read(SharedPref.IS_FIRST, true)){
+        if (!SharedPref.read(SharedPref.IS_FIRST, true)) {
             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
             startActivity(intent);
             finish();
@@ -41,29 +41,29 @@ public class IntroActivity extends FancyWalkthroughActivity {
                 ApiClient.getClient().create(ApiInterface.class);
         Call<Place[]> call = apiService.getPlaces();
         call.enqueue(new Callback<Place[]>() {
-                         @Override
-                         public void onResponse(Call<Place[]> call, Response<Place[]> response) {
-                            placeList = new ArrayList<>(Arrays.asList(response.body()));
-                         }
+            @Override
+            public void onResponse(Call<Place[]> call, Response<Place[]> response) {
+                placeList = new ArrayList<>(Arrays.asList(response.body()));
+            }
 
-                         @Override
-                         public void onFailure(Call<Place[]> call, Throwable t) {
+            @Override
+            public void onFailure(Call<Place[]> call, Throwable t) {
 
-                         }
-                     });
+            }
+        });
         FancyWalkthroughCard fancywalkthroughCard1 = new FancyWalkthroughCard("Find Topic", "Find or create the topic you need to study in your college.", R.drawable.find_topic);
-        FancyWalkthroughCard fancywalkthroughCard2 = new FancyWalkthroughCard("Criticize Your Skills", "Give your skills a score, so that we can recommend you teams you should involve.",R.drawable.criticize_skills);
-        FancyWalkthroughCard fancywalkthroughCard3 = new FancyWalkthroughCard("Apply a Team", "Based on our recommendation select a team to join.",R.drawable.apply);
-        FancyWalkthroughCard fancywalkthroughCard4 = new FancyWalkthroughCard("Start to Studify", "If they accept your request, get ready to study. \nIf they deny, fuck it, you can create your own team!",R.drawable.accepted);
+        FancyWalkthroughCard fancywalkthroughCard2 = new FancyWalkthroughCard("Criticize Your Skills", "Give your skills a score, so that we can recommend you teams you should involve.", R.drawable.criticize_skills);
+        FancyWalkthroughCard fancywalkthroughCard3 = new FancyWalkthroughCard("Apply a Team", "Based on our recommendation select a team to join.", R.drawable.apply);
+        FancyWalkthroughCard fancywalkthroughCard4 = new FancyWalkthroughCard("Start to Studify", "If they accept your request, get ready to study. \nIf they deny, fuck it, you can create your own team!", R.drawable.accepted);
 
         fancywalkthroughCard1.setBackgroundColor(R.color.white);
-        fancywalkthroughCard1.setIconLayoutParams(300,300,0,0,0,0);
+        fancywalkthroughCard1.setIconLayoutParams(300, 300, 0, 0, 0, 0);
         fancywalkthroughCard2.setBackgroundColor(R.color.white);
-        fancywalkthroughCard2.setIconLayoutParams(300,300,0,0,0,0);
+        fancywalkthroughCard2.setIconLayoutParams(300, 300, 0, 0, 0, 0);
         fancywalkthroughCard3.setBackgroundColor(R.color.white);
-        fancywalkthroughCard3.setIconLayoutParams(300,300,0,0,0,0);
+        fancywalkthroughCard3.setIconLayoutParams(300, 300, 0, 0, 0, 0);
         fancywalkthroughCard4.setBackgroundColor(R.color.white);
-        fancywalkthroughCard4.setIconLayoutParams(300,300,0,0,0,0);
+        fancywalkthroughCard4.setIconLayoutParams(300, 300, 0, 0, 0, 0);
         List<FancyWalkthroughCard> pages = new ArrayList<>();
 
         pages.add(fancywalkthroughCard1);
@@ -87,7 +87,7 @@ public class IntroActivity extends FancyWalkthroughActivity {
     @Override
     public void onFinishButtonPressed() {
         String[] colleges = new String[placeList.size()];
-        for (int i = 0; i < colleges.length; i++){
+        for (int i = 0; i < colleges.length; i++) {
             colleges[i] = placeList.get(i).getTitle();
         }
         new MaterialDialog.Builder(this)

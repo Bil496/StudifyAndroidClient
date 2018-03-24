@@ -2,10 +2,8 @@ package com.bil496.studifyapp.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.bil496.studifyapp.model.User;
 import com.bil496.studifyapp.rest.ApiClient;
 import com.bil496.studifyapp.rest.ApiInterface;
 import com.bil496.studifyapp.util.SharedPref;
@@ -25,23 +23,21 @@ import retrofit2.Call;
 public class DeleteTokenService extends IntentService {
     public static final String TAG = DeleteTokenService.class.getSimpleName();
 
-    public DeleteTokenService()
-    {
+    public DeleteTokenService() {
         super(TAG);
     }
 
     @Override
-    protected void onHandleIntent(Intent intent)
-    {
+    protected void onHandleIntent(Intent intent) {
         // Check for current token
         String originalToken = SharedPref.read(SharedPref.FIREBASE_TOKEN, "");
         Log.d(TAG, "Token before deletion: " + originalToken);
 
-        if(originalToken == ""){
+        if (originalToken == "") {
             // Now manually call onTokenRefresh()
             Log.d(TAG, "Getting new token");
             FirebaseInstanceId.getInstance().getToken();
-        }else{
+        } else {
             ApiInterface apiService =
                     ApiClient.getClient().create(ApiInterface.class);
             RequestBody body =

@@ -1,8 +1,5 @@
 package com.bil496.studifyapp.model;
 
-import android.support.v7.app.AppCompatActivity;
-
-import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -13,11 +10,6 @@ import java.io.Serializable;
 
 public class Payload implements Serializable {
     private static Gson gson = new Gson();
-    public enum Type {
-        JOIN_REQUEST, ACCEPTED, DENIED, KICKED,
-        // not supported yet
-        FOLLOWED, CHAT_MESSAGE
-    }
     private Type type;
     private Serializable payloadData;
     private Notification notification;
@@ -48,5 +40,11 @@ public class Payload implements Serializable {
 
     public void setNotification(Notification notification) {
         this.notification = notification;
+    }
+
+    public enum Type {
+        JOIN_REQUEST, ACCEPTED, DENIED, KICKED,
+        // not supported yet
+        FOLLOWED, CHAT_MESSAGE
     }
 }

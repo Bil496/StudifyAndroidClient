@@ -44,12 +44,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             payload.setType(Payload.Type.valueOf(remoteMessage.getData().get("type")));
             String notificationString = remoteMessage.getData().get("notification");
-            if(notificationString.isEmpty() == false){
+            if (notificationString.isEmpty() == false) {
                 notification = new Gson().fromJson(notificationString, Notification.class);
                 payload.setNotification(notification);
             }
             String jsonString = remoteMessage.getData().get("payload");
-            switch (payload.getType()){
+            switch (payload.getType()) {
                 case JOIN_REQUEST:
                     try {
                         JSONObject obj = new JSONObject(jsonString);
@@ -126,10 +126,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .smallIcon(R.drawable.ic_launcher)
                     .largeIcon(R.mipmap.ic_launcher)
                     .flags(android.app.Notification.DEFAULT_ALL);
-            if (activityToStart != null){
-                if (bundleOfActivity == null){
+            if (activityToStart != null) {
+                if (bundleOfActivity == null) {
                     tmpLoad = tmpLoad.click(activityToStart);
-                }else{
+                } else {
                     tmpLoad = tmpLoad.click(activityToStart, bundleOfActivity);
                 }
             }

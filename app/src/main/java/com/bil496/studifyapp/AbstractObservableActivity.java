@@ -2,8 +2,6 @@ package com.bil496.studifyapp;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -30,7 +28,7 @@ import retrofit2.Response;
 
 public abstract class AbstractObservableActivity extends AppCompatActivity implements Observer {
 
-    protected void onNotification(final Payload payload){
+    protected void onNotification(final Payload payload) {
         final Activity mActivity = AbstractObservableActivity.this;
         mActivity.runOnUiThread(new Runnable() {
             @Override
@@ -63,9 +61,9 @@ public abstract class AbstractObservableActivity extends AppCompatActivity imple
                                         call.enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if(response.isSuccessful()){
+                                                if (response.isSuccessful()) {
                                                     Toast.makeText(mActivity, "Successfully denied", Toast.LENGTH_SHORT).show();
-                                                }else{
+                                                } else {
                                                     APIError error = ErrorUtils.parseError(response);
                                                     Toast.makeText(mActivity, error.message(), Toast.LENGTH_LONG).show();
                                                 }
@@ -86,15 +84,15 @@ public abstract class AbstractObservableActivity extends AppCompatActivity imple
                                         call.enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if(response.isSuccessful()){
+                                                if (response.isSuccessful()) {
                                                     Toast.makeText(mActivity, "Successfully accepted", Toast.LENGTH_SHORT).show();
-                                                    if(mActivity instanceof TeamActivity){
-                                                        ((TeamActivity)mActivity).loadData();
-                                                    }else{
+                                                    if (mActivity instanceof TeamActivity) {
+                                                        ((TeamActivity) mActivity).loadData();
+                                                    } else {
                                                         Intent intent = new Intent(mActivity, TeamActivity.class);
                                                         startActivity(intent);
                                                     }
-                                                }else{
+                                                } else {
                                                     APIError error = ErrorUtils.parseError(response);
                                                     Toast.makeText(mActivity, error.message(), Toast.LENGTH_LONG).show();
                                                 }

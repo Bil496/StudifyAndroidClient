@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.app.infideap.stylishwidget.view.AButton;
@@ -39,10 +38,12 @@ import retrofit2.Response;
  */
 
 public class ChatActivity extends AbstractObservableActivity {
-    @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     @BindView(R.id.btn_send)
     AButton mButtonSend;
-    @BindView(R.id.et_message) EditText mEditTextMessage;
+    @BindView(R.id.et_message)
+    EditText mEditTextMessage;
 
     private ChatMessageAdapter adapter;
     private Realm realm;
@@ -129,7 +130,7 @@ public class ChatActivity extends AbstractObservableActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     ChatMessage chatMessage = new ChatMessage(message);
                     chatMessage.setId(RealmController.getInstance().getMessagesCount());
                     RealmController.with(ChatActivity.this).addMessage(chatMessage);
@@ -167,7 +168,7 @@ public class ChatActivity extends AbstractObservableActivity {
     @Override
     protected void onNotification(Payload payload) {
         super.onNotification(payload);
-        if(payload.getType() == Payload.Type.CHAT_MESSAGE){
+        if (payload.getType() == Payload.Type.CHAT_MESSAGE) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

@@ -15,8 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.EventListener;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -29,9 +27,8 @@ import me.himanshusoni.chatmessageview.ChatMessageView;
  */
 
 public class ChatMessageAdapter extends RealmRecyclerViewAdapter<ChatMessage> {
-    private final String TAG = "ChatMessageAdapter";
     private static final int MY_MESSAGE = 0, OTHER_MESSAGE = 1, OTHER_MESSAGE_SEQUENCE = 2;
-
+    private final String TAG = "ChatMessageAdapter";
     private Context mContext;
     private Realm realm;
     private LayoutInflater inflater;
@@ -53,8 +50,8 @@ public class ChatMessageAdapter extends RealmRecyclerViewAdapter<ChatMessage> {
     public int getItemViewType(int position) {
         ChatMessage item = getItem(position);
         if (item.isMine()) return MY_MESSAGE;
-        else{
-            if(position == 0 || getItem(position - 1).isMine() || !getItem(position - 1).getSenderName().equals(item.getSenderName()))
+        else {
+            if (position == 0 || getItem(position - 1).isMine() || !getItem(position - 1).getSenderName().equals(item.getSenderName()))
                 return OTHER_MESSAGE;
             else
                 return OTHER_MESSAGE_SEQUENCE;
@@ -80,15 +77,15 @@ public class ChatMessageAdapter extends RealmRecyclerViewAdapter<ChatMessage> {
         String date = new SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(new Date());
         holder.tvTime.setText(date);
 
-        if(chatMessage.isMine() == false){
-            if (viewHolder.getItemViewType() == OTHER_MESSAGE){
+        if (chatMessage.isMine() == false) {
+            if (viewHolder.getItemViewType() == OTHER_MESSAGE) {
                 holder.tvSenderName.setText(chatMessage.getSenderName());
                 Picasso.get()
                         .load(chatMessage.getSenderImage())
                         .placeholder(R.drawable.user)
                         .error(R.drawable.user)
                         .into(holder.ivSenderImage);
-            }else{
+            } else {
                 holder.tvSenderName.setVisibility(View.GONE);
                 holder.ivSenderImage.setVisibility(View.GONE);
             }

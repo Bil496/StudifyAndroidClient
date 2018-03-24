@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by burak on 3/11/2018.
  */
 
-public class Place implements Serializable{
+public class Place implements Serializable {
     @SerializedName("id")
     private Integer id;
     @SerializedName("title")

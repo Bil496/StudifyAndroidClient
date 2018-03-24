@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.app.infideap.stylishwidget.view.AButton;
@@ -79,12 +78,12 @@ public class TopicFormActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_send){
-            if(topicTitle.getText().toString().trim().length() > 0){
+        if (item.getItemId() == R.id.action_send) {
+            if (topicTitle.getText().toString().trim().length() > 0) {
                 Topic topic = new Topic();
                 topic.setTitle(topicTitle.getText().toString().trim());
                 List<Subtopic> subtopics = new ArrayList<>();
-                for(int i = 0; i < chipContainer.getChildCount(); i++) {
+                for (int i = 0; i < chipContainer.getChildCount(); i++) {
                     Chip chip = (Chip) chipContainer.getChildAt(i);
                     Subtopic subtopic = new Subtopic();
                     subtopic.setTitle(chip.getChipText());
@@ -94,13 +93,13 @@ public class TopicFormActivity extends AppCompatActivity {
                 topic.setSubtopics(subtopics);
 
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("topic",topic);
-                setResult(Activity.RESULT_OK,returnIntent);
+                returnIntent.putExtra("topic", topic);
+                setResult(Activity.RESULT_OK, returnIntent);
                 finish();
-            }else {
+            } else {
                 Toast.makeText(getBaseContext(), "Enter a valid title", Toast.LENGTH_LONG).show();
             }
-        }else if(item.getItemId() == android.R.id.home){
+        } else if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return true;

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,25 +18,25 @@ import com.bil496.studifyapp.util.Status;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.ContentValues.TAG;
-
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
 
-    @BindView(R.id.input_email) EditText _usernameText;
-    @BindView(R.id.input_password) EditText _passwordText;
-    @BindView(R.id.btn_login) Button _loginButton;
+    @BindView(R.id.input_email)
+    EditText _usernameText;
+    @BindView(R.id.input_password)
+    EditText _passwordText;
+    @BindView(R.id.btn_login)
+    Button _loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Integer userId = SharedPref.read(SharedPref.USER_ID, -1);
-        if(userId != -1){
+        if (userId != -1) {
             Intent intent = new Intent(getBaseContext(), MainActivity.class);
             startActivity(intent);
             finish();
@@ -78,17 +77,17 @@ public class LoginActivity extends AppCompatActivity {
         Call<User> call = apiService.getUser(username);
         call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<User>call, Response<User> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 progressDialog.cancel();
-                if (response.body() != null){
+                if (response.body() != null) {
                     onLoginSuccess(response.body());
-                }else{
+                } else {
                     onLoginFailed();
                 }
             }
 
             @Override
-            public void onFailure(Call<User>call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 progressDialog.cancel();

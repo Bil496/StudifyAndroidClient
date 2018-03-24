@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.bil496.studifyapp.ProfileActivity;
 import com.bil496.studifyapp.R;
 import com.bil496.studifyapp.model.User;
-import com.github.johnkil.print.PrintView;
 import com.squareup.picasso.Picasso;
 import com.unnamed.b.atv.model.TreeNode;
 
@@ -22,9 +21,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class UserViewHolder extends TreeNode.BaseNodeViewHolder<UserViewHolder.UserItem> {
-    @BindView(R.id.profile_pic) ImageView imageView;
-    @BindView(R.id.user_name) TextView nameLabel;
-    @BindView(R.id.size) TextView userNameLabel;
+    @BindView(R.id.profile_pic)
+    ImageView imageView;
+    @BindView(R.id.user_name)
+    TextView nameLabel;
+    @BindView(R.id.size)
+    TextView userNameLabel;
+
     public UserViewHolder(Context context) {
         super(context);
     }

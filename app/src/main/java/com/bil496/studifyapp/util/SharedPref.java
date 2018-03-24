@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
  */
 
 public class SharedPref {
-    private static SharedPreferences mSharedPref;
     public static final String LOCATION_ID = "LOCATION_ID";
     public static final String LOCATION_TITLE = "LOCATION_TITLE";
     public static final String USER_ID = "USER_ID";
@@ -19,15 +18,14 @@ public class SharedPref {
     public static final String CURRENT_TEAM_ID = "CURRENT_TEAM_ID";
     public static final String FIREBASE_TOKEN = "FIREBASE_TOKEN";
     public static final String UNREAD_COUNT = "UNREAD_COUNT";
+    private static SharedPreferences mSharedPref;
 
-    private SharedPref()
-    {
+    private SharedPref() {
 
     }
 
-    public static void init(Context context)
-    {
-        if(mSharedPref == null)
+    public static void init(Context context) {
+        if (mSharedPref == null)
             mSharedPref = context.getSharedPreferences(context.getPackageName(), Activity.MODE_PRIVATE);
     }
 
@@ -60,10 +58,10 @@ public class SharedPref {
         prefsEditor.putInt(key, value).commit();
     }
 
-    public static void clear(){
+    public static void clear() {
         String firebaseToken = SharedPref.read(SharedPref.FIREBASE_TOKEN, "");
         mSharedPref.edit().clear().commit();
-        if(firebaseToken.length() > 0)
+        if (firebaseToken.length() > 0)
             SharedPref.write(SharedPref.FIREBASE_TOKEN, firebaseToken);
     }
 }
