@@ -105,8 +105,10 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
         SharedPref.write(SharedPref.USER_ID, user.getId());
         SharedPref.write(SharedPref.USERNAME, user.getUsername());
-        Status.whenEnterTopic(getBaseContext(), user.getCurrentTopic().getId());
-        Status.whenEnterTeam(LoginActivity.this, user.getCurrentTeam().getId());
+        if(user.getCurrentTopic() != null)
+            Status.whenEnterTopic(getBaseContext(), user.getCurrentTopic().getId());
+        if(user.getCurrentTeam() != null)
+            Status.whenEnterTeam(LoginActivity.this, user.getCurrentTeam().getId());
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         startActivity(intent);
         finish();

@@ -54,7 +54,7 @@ public class IntroActivity extends FancyWalkthroughActivity {
         FancyWalkthroughCard fancywalkthroughCard1 = new FancyWalkthroughCard("Find Topic", "Find or create the topic you need to study in your college.", R.drawable.find_topic);
         FancyWalkthroughCard fancywalkthroughCard2 = new FancyWalkthroughCard("Criticize Your Skills", "Give your skills a score, so that we can recommend you teams you should involve.", R.drawable.criticize_skills);
         FancyWalkthroughCard fancywalkthroughCard3 = new FancyWalkthroughCard("Apply a Team", "Based on our recommendation select a team to join.", R.drawable.apply);
-        FancyWalkthroughCard fancywalkthroughCard4 = new FancyWalkthroughCard("Start to Studify", "If they accept your request, get ready to study. \nIf they deny, fuck it, you can create your own team!", R.drawable.accepted);
+        FancyWalkthroughCard fancywalkthroughCard4 = new FancyWalkthroughCard("Start to Studify", "If they accept your request, get ready to study. \nIf they deny, create your own team!", R.drawable.accepted);
 
         fancywalkthroughCard1.setBackgroundColor(R.color.white);
         fancywalkthroughCard1.setIconLayoutParams(300, 300, 0, 0, 0, 0);
